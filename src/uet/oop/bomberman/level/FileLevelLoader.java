@@ -8,6 +8,7 @@ import uet.oop.bomberman.entities.character.enemy.Balloon;
 import uet.oop.bomberman.entities.character.enemy.Oneal;
 import uet.oop.bomberman.entities.tile.Grass;
 import uet.oop.bomberman.entities.tile.Portal;
+import uet.oop.bomberman.entities.tile.Wall;
 import uet.oop.bomberman.entities.tile.destroyable.Brick;
 import uet.oop.bomberman.entities.tile.item.SpeedItem;
 import uet.oop.bomberman.entities.tile.item.FlameItem;
@@ -92,11 +93,16 @@ public class FileLevelLoader extends LevelLoader {
 					case '2':
 						_board.addCharacter( new Oneal(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board));
 						_board.addEntity(pos, new Grass(x, y, Sprite.grass));
+						System.out.println(Integer.toString(x)+" "+Integer.toString(y));
 						break;
 
 					case '#':
-						Sprite sprite = Sprite.wall;
-						_board.addEntity(pos, new Grass(x, y, sprite));
+						_board.addEntity(pos,
+								new LayeredEntity(x, y,
+										new Grass(x, y, Sprite.grass),
+										new Wall(x, y, Sprite.wall)
+								)
+						);
 						break;
 
 					case '*':

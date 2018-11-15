@@ -11,6 +11,7 @@ import uet.oop.bomberman.entities.bomb.FlameSegment;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.entities.character.enemy.ai.*;
+import uet.oop.bomberman.entities.tile.Grass;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.level.Coordinates;
@@ -138,11 +139,12 @@ public abstract class Enemy extends Character {
 		int yy=(Coordinates.pixelToTile(y)-1);
 		int pos = yy * this._board.getWidth() + xx;
 		LayeredEntity cur = null;
-		System.out.println(x); // 97
-		System.out.println(y); // 32
-		System.out.println(pos); // 39
+		//System.out.println(xx); // 97
+		//System.out.println(yy); // 32
+		//System.out.println(pos); // 39
 		// ------------>>>>>>>> java.lang.NullPointerException
 		//	at uet.oop.bomberman.entities.character.enemy.Enemy.canMove(Enemy.java:147)
+		//if (this._board._entities[pos] == null) System.out.println("minh");
 		if (this._board._entities[pos].
 				getSprite().
 					equals(Sprite.brick)) return false;
