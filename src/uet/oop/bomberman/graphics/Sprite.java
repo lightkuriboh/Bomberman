@@ -27,26 +27,26 @@ public class Sprite {
 	| Bomber Sprites
 	|--------------------------------------------------------------------------
 	 */
-	public static Sprite player_up = new Sprite(16, 0, 0, SpriteSheet.tiles, 12, 12);
-	public static Sprite player_down = new Sprite(16, 2, 0, SpriteSheet.tiles, 12, 12);
-	public static Sprite player_left = new Sprite(16, 3, 0, SpriteSheet.tiles, 12, 12);
-	public static Sprite player_right = new Sprite(16, 1, 0, SpriteSheet.tiles, 12, 12);
+	public static Sprite player_up = new Sprite(16, 0, 0, SpriteSheet.tiles, 12, 15);
+	public static Sprite player_down = new Sprite(16, 2, 0, SpriteSheet.tiles, 12, 15);
+	public static Sprite player_left = new Sprite(16, 3, 0, SpriteSheet.tiles, 12, 15);
+	public static Sprite player_right = new Sprite(16, 1, 0, SpriteSheet.tiles, 12, 15);
 	
-	public static Sprite player_up_1 = new Sprite(16, 0, 1, SpriteSheet.tiles, 12, 12);
-	public static Sprite player_up_2 = new Sprite(16, 0, 2, SpriteSheet.tiles, 12, 12);
+	public static Sprite player_up_1 = new Sprite(16, 0, 1, SpriteSheet.tiles, 12, 15);
+	public static Sprite player_up_2 = new Sprite(16, 0, 2, SpriteSheet.tiles, 12, 15);
 	
-	public static Sprite player_down_1 = new Sprite(16, 2, 1, SpriteSheet.tiles, 12, 12);
-	public static Sprite player_down_2 = new Sprite(16, 2, 2, SpriteSheet.tiles, 12, 12);
+	public static Sprite player_down_1 = new Sprite(16, 2, 1, SpriteSheet.tiles, 12, 15);
+	public static Sprite player_down_2 = new Sprite(16, 2, 2, SpriteSheet.tiles, 12, 15);
 	
-	public static Sprite player_left_1 = new Sprite(16, 3, 1, SpriteSheet.tiles, 12, 12);
-	public static Sprite player_left_2 = new Sprite(16, 3, 2, SpriteSheet.tiles, 12 ,12);
+	public static Sprite player_left_1 = new Sprite(16, 3, 1, SpriteSheet.tiles, 12, 15);
+	public static Sprite player_left_2 = new Sprite(16, 3, 2, SpriteSheet.tiles, 12 ,15);
 	
-	public static Sprite player_right_1 = new Sprite(16, 1, 1, SpriteSheet.tiles, 12, 12);
-	public static Sprite player_right_2 = new Sprite(16, 1, 2, SpriteSheet.tiles, 12, 12);
+	public static Sprite player_right_1 = new Sprite(16, 1, 1, SpriteSheet.tiles, 12, 15);
+	public static Sprite player_right_2 = new Sprite(16, 1, 2, SpriteSheet.tiles, 12, 15);
 	
-	public static Sprite player_dead1 = new Sprite(16, 4, 2, SpriteSheet.tiles, 12, 12);
-	public static Sprite player_dead2 = new Sprite(16, 5, 2, SpriteSheet.tiles, 12, 12);
-	public static Sprite player_dead3 = new Sprite(16, 6, 2, SpriteSheet.tiles, 12, 12);
+	public static Sprite player_dead1 = new Sprite(16, 4, 2, SpriteSheet.tiles, 12, 15);
+	public static Sprite player_dead2 = new Sprite(16, 5, 2, SpriteSheet.tiles, 12, 15);
+	public static Sprite player_dead3 = new Sprite(16, 6, 2, SpriteSheet.tiles, 12, 15);
 	
 	/*
 	|--------------------------------------------------------------------------

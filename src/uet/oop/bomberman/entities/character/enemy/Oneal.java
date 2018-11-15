@@ -15,6 +15,7 @@ public class Oneal extends Enemy {
 		_sprite = Sprite.oneal_left1;
 		
 		_ai = new AIMedium(board, _board.getBomber(), this);
+//		_ai = new AILow();
 
 		_direction  = _ai.calculateDirection();
 	}

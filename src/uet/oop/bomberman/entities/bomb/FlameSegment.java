@@ -69,7 +69,7 @@ public class FlameSegment extends Entity {
 	protected void chooseSprite() {
 		_clock++;
 		switch (_direction) {
-			case 2:
+			case 0:
 				if (!_last) {
 					_sprite=Sprite.movingSprite(Sprite.explosion_vertical,Sprite.explosion_vertical1,Sprite.explosion_vertical2,
 							Sprite.explosion_vertical1,Sprite.explosion_vertical,_clock,50);
@@ -80,7 +80,7 @@ public class FlameSegment extends Entity {
 							Sprite.explosion_vertical_top_last1,Sprite.explosion_vertical_top_last,_clock,50);
 				}
 				break;
-			case 0:
+			case 2:
 				if (!_last) {
 					_sprite=Sprite.movingSprite(Sprite.explosion_vertical,Sprite.explosion_vertical1,Sprite.explosion_vertical2,
 							Sprite.explosion_vertical1,Sprite.explosion_vertical,_clock,50);

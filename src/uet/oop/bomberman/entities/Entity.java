@@ -19,6 +19,10 @@ public abstract class Entity implements IRender {
 	protected boolean _removed = false;
 	protected Sprite _sprite;
 
+	public Sprite get_sprite() {
+		return _sprite;
+	}
+
 	/**
 	 * Phương thức này được gọi liên tục trong vòng lặp game,
 	 * mục đích để xử lý sự kiện và cập nhật trạng thái Entity

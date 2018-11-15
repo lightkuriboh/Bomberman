@@ -27,7 +27,13 @@ public class Bomb extends AnimatedEntitiy {
 		_radius=radius;
 	}
 
+	public Flame getFlameAt(int idx) {
+		return this._flames[idx];
+	}
 
+	public int getLengthFlameAt(int idx) {
+		return this.getFlameAt(idx)._flameSegments.length;
+	}
 
 	public int get_radius() {
 		return _radius;

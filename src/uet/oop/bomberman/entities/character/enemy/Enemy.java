@@ -16,6 +16,7 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.level.Coordinates;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Enemy extends Character {
@@ -45,7 +46,11 @@ public abstract class Enemy extends Character {
 		_timeAfter = 20;
 		_deadSprite = dead;
 	}
-	
+
+	public double get_speed() {
+		return _speed;
+	}
+
 	@Override
 	public void update() {
 		animate();
@@ -123,6 +128,7 @@ public abstract class Enemy extends Character {
 		_y += ya;
 		_x += xa;
 	}
+
 	
 	@Override
 	public boolean canMove(double x, double y) {
@@ -132,7 +138,15 @@ public abstract class Enemy extends Character {
 		int yy=(Coordinates.pixelToTile(y)-1);
 		int pos = yy * this._board.getWidth() + xx;
 		LayeredEntity cur = null;
-		if (this._board._entities[pos].getSprite().equals(Sprite.brick)) return false;
+		System.out.println(x); // 97
+		System.out.println(y); // 32
+		System.out.println(pos); // 39
+		// ------------>>>>>>>> java.lang.NullPointerException
+		//	at uet.oop.bomberman.entities.character.enemy.Enemy.canMove(Enemy.java:147)
+		if (this._board._entities[pos].
+				getSprite().
+					equals(Sprite.brick)) return false;
+
 		if (this._board._entities[pos].getSprite().equals(Sprite.wall)) return false;
 		if (this._board._entities[pos] instanceof LayeredEntity) {
 			cur = (LayeredEntity) this._board._entities[pos];
