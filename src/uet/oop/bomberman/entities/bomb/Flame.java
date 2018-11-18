@@ -124,10 +124,59 @@ public class Flame extends Entity {
 		}
 	}
 
+	private static int calcX(int _direction) {
+		int x = 0;
+		if (_direction == 1) {
+			x = 1;
+		} else
+		if (_direction == 3) {
+			x = -1;
+		}
+		return x;
+	}
+
+	private static int calcY(int _direction) {
+		int y = 0;
+		if (_direction == 0) {
+			y = -1;
+		} else
+		if (_direction == 2) {
+			y = 1;
+		}
+		return y;
+	}
+	public static int calculatePermitedDistance(int _x, int _y, Board _board, int _radius, int _direction) {
+		int x = calcX(_direction);
+		int y = calcY(_direction);
+		int len = _radius;
+		for (int i = 1; i <= _radius; i++) {
+			int xx = _x + i * x;
+			int yy = _y + i * y;
+			int pos = xx + yy * _board.getWidth();
+			Sprite entity = _board._entities[pos].getSprite();
+			if (entity.equals(Sprite.wall)) {
+				len = i - 1;
+				break;
+			} else {
+				if (entity.equals(Sprite.brick)) {
+					len = i;
+					break;
+				}
+			}
+			if (entity.equals(Sprite.brick)) {
+				len = i;
+				break;
+			}
+		}
+		return len;
+	}
+
 	/**
 	 * Tính toán độ dài của Flame, nếu gặp vật cản là Brick/Wall, độ dài sẽ bị cắt ngắn
 	 * @return
 	 */
+
+
 	public int calculatePermitedDistance() {
 		// TODO: thực hiện tính toán độ dài của Flame
 		int x = calcX();
