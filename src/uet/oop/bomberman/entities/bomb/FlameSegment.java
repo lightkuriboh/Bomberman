@@ -72,45 +72,45 @@ public class FlameSegment extends Entity {
 			case 0:
 				if (!_last) {
 					_sprite=Sprite.movingSprite(Sprite.explosion_vertical,Sprite.explosion_vertical1,Sprite.explosion_vertical2,
-							Sprite.explosion_vertical1,Sprite.explosion_vertical,_clock,50);
+							Sprite.explosion_vertical1,Sprite.explosion_vertical,_clock,25);
 				}
 				else {
 					_sprite=Sprite.movingSprite(Sprite.explosion_vertical_top_last,Sprite.explosion_vertical_top_last1,
 							Sprite.explosion_vertical_top_last2,
-							Sprite.explosion_vertical_top_last1,Sprite.explosion_vertical_top_last,_clock,50);
+							Sprite.explosion_vertical_top_last1,Sprite.explosion_vertical_top_last,_clock,25);
 				}
 				break;
 			case 2:
 				if (!_last) {
 					_sprite=Sprite.movingSprite(Sprite.explosion_vertical,Sprite.explosion_vertical1,Sprite.explosion_vertical2,
-							Sprite.explosion_vertical1,Sprite.explosion_vertical,_clock,50);
+							Sprite.explosion_vertical1,Sprite.explosion_vertical,_clock,25);
 				}
 				else {
 					_sprite=Sprite.movingSprite(Sprite.explosion_vertical_down_last,Sprite.explosion_vertical_down_last1,
 							Sprite.explosion_vertical_down_last2,
-							Sprite.explosion_vertical_down_last1,Sprite.explosion_vertical_down_last,_clock,50);
+							Sprite.explosion_vertical_down_last1,Sprite.explosion_vertical_down_last,_clock,25);
 				}
 				break;
 			case 1:
 				if (!_last) {
 					_sprite=Sprite.movingSprite(Sprite.explosion_horizontal,Sprite.explosion_horizontal1,Sprite.explosion_horizontal2,
-							Sprite.explosion_horizontal1,Sprite.explosion_horizontal,_clock,50);
+							Sprite.explosion_horizontal1,Sprite.explosion_horizontal,_clock,25);
 				}
 				else {
 					_sprite=Sprite.movingSprite(Sprite.explosion_horizontal_right_last,Sprite.explosion_horizontal_right_last1,
 							Sprite.explosion_horizontal_right_last2,
-							Sprite.explosion_horizontal_right_last1,Sprite.explosion_horizontal_right_last,_clock,50);
+							Sprite.explosion_horizontal_right_last1,Sprite.explosion_horizontal_right_last,_clock,25);
 				}
 				break;
 			case 3:
 				if (!_last) {
 					_sprite=Sprite.movingSprite(Sprite.explosion_horizontal,Sprite.explosion_horizontal1,Sprite.explosion_horizontal2,
-							Sprite.explosion_horizontal1,Sprite.explosion_horizontal,_clock,50);
+							Sprite.explosion_horizontal1,Sprite.explosion_horizontal,_clock,25);
 				}
 				else {
 					_sprite=Sprite.movingSprite(Sprite.explosion_horizontal_left_last,Sprite.explosion_horizontal_left_last1,
 							Sprite.explosion_horizontal_left_last2,
-							Sprite.explosion_horizontal_left_last1,Sprite.explosion_horizontal_left_last,_clock,50);
+							Sprite.explosion_horizontal_left_last1,Sprite.explosion_horizontal_left_last,_clock,25);
 				}
 				break;
 		}

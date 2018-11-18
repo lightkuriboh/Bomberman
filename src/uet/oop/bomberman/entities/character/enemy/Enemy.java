@@ -90,7 +90,7 @@ public abstract class Enemy extends Character {
 
 		if (_steps <= 0) {
 			_direction = _ai.calculateDirection();
-			System.out.println(_direction + " dir");
+			//System.out.println(_direction + " dir");
 			_steps = MAX_STEPS;
 		}
 
@@ -136,24 +136,18 @@ public abstract class Enemy extends Character {
 	@Override
 	public boolean canMove(double x, double y) {
 		// TODO: kiểm tra có đối tượng tại vị trí chuẩn bị di chuyển đến và có thể di chuyển tới đó hay không
-
 		int xx=Coordinates.pixelToTile(x);
 		int yy=(Coordinates.pixelToTile(y)-1);
 		int pos = yy * this._board.getWidth() + xx;
 		LayeredEntity cur = null;
-//		System.out.println(x); // 97
-//		System.out.println(y); // 32
-//		System.out.println(pos); // 39
-		// ------------>>>>>>>> java.lang.NullPointerException
-		//	at uet.oop.bomberman.entities.character.enemy.Enemy.canMove(Enemy.java:147)
-		if (this._board._entities[pos].
-				getSprite().
-					equals(Sprite.brick)) return false;
-
+		if (this._board._entities[pos].getSprite().equals(Sprite.brick)) return false;
 		if (this._board._entities[pos].getSprite().equals(Sprite.wall)) return false;
 		if (this._board._entities[pos] instanceof LayeredEntity) {
 			cur = (LayeredEntity) this._board._entities[pos];
-			if (cur.getTopEntity() instanceof Bomb) return false;
+			if (cur.getTopEntity() instanceof Bomb) {
+				if (!((Bomb)cur.getTopEntity()).getCurChar().contains(this))
+					return false;
+			}
 		}
 
 		int xx1=Coordinates.pixelToTile(x+_sprite.get_realWidth()-1);
@@ -163,7 +157,10 @@ public abstract class Enemy extends Character {
 		if (this._board._entities[pos].getSprite().equals(Sprite.wall)) return false;
 		if (this._board._entities[pos] instanceof LayeredEntity) {
 			cur = (LayeredEntity) this._board._entities[pos];
-			if (cur.getTopEntity() instanceof Bomb) return false;
+			if (cur.getTopEntity() instanceof Bomb) {
+				if (!((Bomb)cur.getTopEntity()).getCurChar().contains(this))
+					return false;
+			}
 		}
 
 		xx1=Coordinates.pixelToTile(x);
@@ -173,7 +170,10 @@ public abstract class Enemy extends Character {
 		if (this._board._entities[pos].getSprite().equals(Sprite.wall)) return false;
 		if (this._board._entities[pos] instanceof LayeredEntity) {
 			cur = (LayeredEntity) this._board._entities[pos];
-			if (cur.getTopEntity() instanceof Bomb) return false;
+			if (cur.getTopEntity() instanceof Bomb) {
+				if (!((Bomb)cur.getTopEntity()).getCurChar().contains(this))
+					return false;
+			}
 		}
 
 		xx1=Coordinates.pixelToTile(x+_sprite.get_realWidth()-1);
@@ -183,10 +183,12 @@ public abstract class Enemy extends Character {
 		if (this._board._entities[pos].getSprite().equals(Sprite.wall)) return false;
 		if (this._board._entities[pos] instanceof LayeredEntity) {
 			cur = (LayeredEntity) this._board._entities[pos];
-			if (cur.getTopEntity() instanceof Bomb) return false;
+			if (cur.getTopEntity() instanceof Bomb) {
+				if (!((Bomb)cur.getTopEntity()).getCurChar().contains(this))
+					return false;
+			}
 		}
 		return true;
-
 	}
 
 	@Override

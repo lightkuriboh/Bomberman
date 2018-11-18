@@ -33,7 +33,7 @@ public class LayeredEntity extends Entity {
 	@Override
 	public void update() {
 		clearRemoved();
-		getTopEntity().update();
+		if (!(getTopEntity() instanceof Bomb)) getTopEntity().update();
 	}
 	
 	@Override

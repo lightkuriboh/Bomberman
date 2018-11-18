@@ -107,7 +107,6 @@ public class Flame extends Entity {
 				xxx = _board.getBombAt(xx,yy);
 			}
 			_board._entities[pos].collide(_flameSegments[i]);
-
 			LayeredEntity character = _board.getCharacterAtExcluding(xx, yy, null);
 			if (character != null) {
 				while (!character.isEmpty()) {

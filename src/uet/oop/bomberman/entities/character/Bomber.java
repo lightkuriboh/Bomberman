@@ -171,26 +171,8 @@ public class Bomber extends Character {
         // TODO: thực hiện tạo đối tượng bom, đặt vào vị trí (x, y)
 
         Bomb bomb = new Bomb(x, y, _board, _bombRad);
-        bomb.setCurChar(this);
         _board.addBomb(bomb);
         _board.addLayeredEntity( y*(int)_board.getWidth()+x,bomb);
-    }
-
-    private void clearBombs() {
-        Iterator<Bomb> bs = _bombs.iterator();
-
-        Bomb b;
-        while (bs.hasNext()) {
-            b = bs.next();
-            if (b.getCurChar()!=null && b.getCurChar().equals(this)&&this.collide(b))  {
-                b.setCurChar(null);
-            }
-            if (b.isRemoved()) {
-                bs.remove();
-                this.inBombRate(1);
-            }
-        }
-
     }
 
     @Override
@@ -256,8 +238,7 @@ public class Bomber extends Character {
         if (this._board._entities[pos] instanceof LayeredEntity) {
             cur = (LayeredEntity) this._board._entities[pos];
             if (cur.getTopEntity() instanceof Bomb) {
-                if (((Bomb)cur.getTopEntity()).getCurChar()==null ||
-                        !((Bomb)cur.getTopEntity()).getCurChar().equals(this))
+                if (!((Bomb)cur.getTopEntity()).getCurChar().contains(this))
                             return false;
             }
         }
@@ -270,8 +251,7 @@ public class Bomber extends Character {
             if (this._board._entities[pos] instanceof LayeredEntity) {
                 cur = (LayeredEntity) this._board._entities[pos];
                 if (cur.getTopEntity() instanceof Bomb) {
-                    if (((Bomb)cur.getTopEntity()).getCurChar()==null ||
-                            !((Bomb)cur.getTopEntity()).getCurChar().equals(this))
+                    if (!((Bomb)cur.getTopEntity()).getCurChar().contains(this))
                         return false;
                 }
             }
@@ -284,8 +264,7 @@ public class Bomber extends Character {
             if (this._board._entities[pos] instanceof LayeredEntity) {
                 cur = (LayeredEntity) this._board._entities[pos];
                 if (cur.getTopEntity() instanceof Bomb) {
-                    if (((Bomb)cur.getTopEntity()).getCurChar()==null ||
-                            !((Bomb)cur.getTopEntity()).getCurChar().equals(this))
+                    if (!((Bomb)cur.getTopEntity()).getCurChar().contains(this))
                         return false;
                 }
             }
@@ -298,12 +277,25 @@ public class Bomber extends Character {
             if (this._board._entities[pos] instanceof LayeredEntity) {
                 cur = (LayeredEntity) this._board._entities[pos];
                 if (cur.getTopEntity() instanceof Bomb) {
-                    if (((Bomb)cur.getTopEntity()).getCurChar()==null ||
-                            !((Bomb)cur.getTopEntity()).getCurChar().equals(this))
+                    if (!((Bomb)cur.getTopEntity()).getCurChar().contains(this))
                         return false;
                 }
             }
         return true;
+    }
+
+    private void clearBombs() {
+        Iterator<Bomb> bs = _bombs.iterator();
+
+        Bomb b;
+        while (bs.hasNext()) {
+            b = bs.next();
+            if (b.isRemoved()) {
+                bs.remove();
+                this.inBombRate(1);
+            }
+        }
+
     }
 
     @Override

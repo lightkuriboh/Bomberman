@@ -3,16 +3,22 @@ package uet.oop.bomberman.entities.bomb;
 import uet.oop.bomberman.Board;
 import uet.oop.bomberman.entities.AnimatedEntitiy;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.LayeredEntity;
 import uet.oop.bomberman.entities.character.Bomber;
+import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.sound.SoundPlayer;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 public class Bomb extends AnimatedEntitiy {
 
-	protected double _timeToExplode = 180; //3 seconds
-	public int _timeAfter = 50;
-	protected Bomber curChar = null;
+	protected double _timeToExplode = 90; //1.5 seconds
+	public int _timeAfter = 25;
+	protected List<Character> curChar = new ArrayList<>();
 	protected Board _board;
 	protected int _clock;
 	protected Flame[] _flames;
@@ -26,6 +32,7 @@ public class Bomb extends AnimatedEntitiy {
 		_sprite = Sprite.bomb;
 		_radius=radius;
 		_flames = new Flame[0];
+		initCurChar();
 	}
 
 	public int getFlameNumber() {
@@ -49,12 +56,26 @@ public class Bomb extends AnimatedEntitiy {
 		return _timeToExplode;
 	}
 
-	public Bomber getCurChar() {
+	public List<Character> getCurChar() {
 		return curChar;
 	}
 
-	public void setCurChar(Bomber curChar) {
-		this.curChar = curChar;
+	private void initCurChar() {
+
+		LayeredEntity character = _board.getCharacterAtExcluding((int)_x, (int)_y, null);
+		if (character != null) {
+			while (!character.isEmpty()) {
+				curChar.add((Character)character.getTopEntity());
+				character.removeTop();
+			}
+		}
+		System.out.println(curChar.get(0).equals(_board.getBomber()));
+	}
+
+	private void updateCurChar() {
+		for(int i = curChar.size()-1; i>=0 ; i--) {
+			if (collide(curChar.get(i))) curChar.remove(i);
+		}
 	}
 
 	@Override
@@ -75,7 +96,8 @@ public class Bomb extends AnimatedEntitiy {
 			else
 				remove();
 		}
-			
+		updateCurChar();
+
 		animate();
 	}
 	
@@ -83,10 +105,10 @@ public class Bomb extends AnimatedEntitiy {
 	public void render(Screen screen) {
 		if(_exploded) {
 			_sprite = Sprite.movingSprite(Sprite.bomb_exploded, Sprite.bomb_exploded1, Sprite.bomb_exploded2,
-					Sprite.bomb_exploded1, Sprite.bomb_exploded, _clock, 50);
+					Sprite.bomb_exploded1, Sprite.bomb_exploded, _clock, 25);
 			renderFlames(screen);
 		} else
-			_sprite = Sprite.movingSprite(Sprite.bomb, Sprite.bomb_1, Sprite.bomb_2, _animate, 60);
+			_sprite = Sprite.movingSprite(Sprite.bomb, Sprite.bomb_1, Sprite.bomb_2, _animate, 30);
 		
 		int xt = (int)_x << 4;
 		int yt = (int)_y << 4;
@@ -157,6 +179,6 @@ public class Bomb extends AnimatedEntitiy {
 		boolean res = super.collide(e);
 		if (!res)
 			if (e instanceof FlameSegment) this.explode();
-        return false;
+        return res;
 	}
 }
