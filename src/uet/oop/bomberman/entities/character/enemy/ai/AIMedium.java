@@ -54,10 +54,9 @@ public class AIMedium extends AI {
 		*/
 		for (BombInfo bomb: bombs) {
 			if (bomb.exploding) {
-//				System.out.println("there is bomb exploding");
 				for (int i = 0; i < 4; i++) {
-					int len = new Flame(bomb.x, bomb.y, i, bomb.radius, this._board, false).calculatePermitedDistance();
-//					++len;
+//					int len = new Flame(bomb.x, bomb.y, i, bomb.radius, this._board, false).calculatePermitedDistance();
+					int len = Flame.calculatePermitedDistance(bomb.x, bomb.y, this._board, bomb.radius, i);
 					for (int j = 0; j <= len; j++) {
 						int xxx = bomb.x + j * dx[i];
 						int yyy = bomb.y + j * dy[i];

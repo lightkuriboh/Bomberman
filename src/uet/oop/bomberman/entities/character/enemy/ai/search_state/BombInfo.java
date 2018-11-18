@@ -11,7 +11,6 @@ public class BombInfo {
     public int radius;
     public boolean exploding;
     public boolean exploded;
-    public int[] segmentLenght = new int[4];
     public Board board;
 
     public BombInfo(BombInfo bombInfo, Board _board) {
@@ -21,9 +20,6 @@ public class BombInfo {
         this.radius = bombInfo.radius;
         this.exploded = false;
         this.board = _board;
-        for (int i = 0; i < 4; i++) {
-            this.segmentLenght[i] = bombInfo.segmentLenght[i];
-        }
     }
 
     public BombInfo(Bomb bomb, Board _board) {
@@ -33,10 +29,6 @@ public class BombInfo {
         this.radius = bomb.get_radius();
         this.exploding = (this.timeToExplode <= 0);
         this.board = _board;
-        for (int i = 0; i < bomb.getFlameNumber(); i++) {
-            this.segmentLenght[i] = new Flame(this.x, this.y, i, this.radius, _board).calculatePermitedDistance();
-        }
-
     }
 
     public void update() {
