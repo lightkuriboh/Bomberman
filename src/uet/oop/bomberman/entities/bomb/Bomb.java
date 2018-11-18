@@ -69,7 +69,6 @@ public class Bomb extends AnimatedEntitiy {
 				character.removeTop();
 			}
 		}
-		System.out.println(curChar.get(0).equals(_board.getBomber()));
 	}
 
 	private void updateCurChar() {
