@@ -90,7 +90,7 @@ public abstract class Enemy extends Character {
 
 		if (_steps <= 0) {
 			_direction = _ai.calculateDirection();
-//			_steps = new Random().nextInt((int)MAX_STEPS);
+			System.out.println(_direction + " dir");
 			_steps = MAX_STEPS;
 		}
 
@@ -105,6 +105,9 @@ public abstract class Enemy extends Character {
 				} else
 					if (_direction == 3) {
 						x = -1 * _speed;
+					} else {
+						x = 0;
+						y = 0;
 					}
 
 		if (canMove(_x + x, _y + y)) {

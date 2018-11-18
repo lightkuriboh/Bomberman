@@ -24,15 +24,18 @@ public class AIMedium extends AI {
 	private Enemy _e;
 	private Board _board;
 	private final int limit = 100;
-	int[] dx = new int[4];
-	int[] dy = new int[4];
+	private int[] dx = new int[4];
+	private int[] dy = new int[4];
+	private boolean smart = false;
+
 	
-	public AIMedium(Board board, Bomber bomber, Enemy e) {
+	public AIMedium(Board board, Bomber bomber, Enemy e, boolean smart) {
 		_bomber = bomber;
 		_e = e;
 		_board = board;
 		dx[0] = 0; dx[1] = 1; dx[2] = 0; dx[3] = -1;
 		dy[0] = -1; dy[1] = 0; dy[2] = 1; dy[3] = 0;
+		this.smart = smart;
 	}
 
 	public boolean inFlame(Sprite _sprite, int x, int y, ArrayList<BombInfo> bombs) {
@@ -54,7 +57,7 @@ public class AIMedium extends AI {
 //				System.out.println("there is bomb exploding");
 				for (int i = 0; i < 4; i++) {
 					int len = new Flame(bomb.x, bomb.y, i, bomb.radius, this._board, false).calculatePermitedDistance();
-
+//					++len;
 					for (int j = 0; j <= len; j++) {
 						int xxx = bomb.x + j * dx[i];
 						int yyy = bomb.y + j * dy[i];
@@ -130,7 +133,7 @@ public class AIMedium extends AI {
 
 			if (cur.explode) {
 //				System.out.println("Bomb exploding!");
-				if (inFlame(_sprite, cur.x, cur.y, cur.listBomb)) {
+				if (this.smart && inFlame(_sprite, cur.x, cur.y, cur.listBomb)) {
 //					System.out.println("In Flame!");
 					continue;
 				}
@@ -149,7 +152,7 @@ public class AIMedium extends AI {
 				int newY = cur.y + dy[dir];
 
 				if (this._e.canMove(Coordinates.tileToPixel(newX), Coordinates.tileToPixel(newY + 1)) && canMove[newY][newX]) {
-
+//					System.out.println(newX + " " + newY + " new");
 					queue.add(new AIMid(cur, newX, newY, dir, this._board).update());
 					canMove[newY][newX] = false;
 				}
@@ -194,10 +197,12 @@ public class AIMedium extends AI {
 //		System.out.println("-------------------------------------------------copy");
 
 		if (minDist == -1) {
-			return new Random().nextInt(4);
+//			return new Random().nextInt(4);
+			return -1;
 		}
-		if (ans.directions.isEmpty()) {
-			return new Random().nextInt(4);
+
+		if (ans.directions.size() == 0) {
+			return -1;
 		}
 
 		return ans.directions.get(0);

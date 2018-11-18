@@ -42,6 +42,6 @@ public class BombInfo {
     public void update() {
         this.timeToExplode -= 32;
         this.exploding = (this.timeToExplode <= 36);
-        this.exploded = (this.timeToExplode < -32);
+        this.exploded = (this.timeToExplode < -64);
     }
 }
