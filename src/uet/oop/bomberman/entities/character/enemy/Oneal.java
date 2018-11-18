@@ -17,7 +17,8 @@ public class Oneal extends Enemy {
 		_ai = new AIMedium(board, _board.getBomber(), this);
 //		_ai = new AILow();
 
-		_direction  = _ai.calculateDirection();
+		//_direction  = _ai.calculateDirection();
+		_direction = 1;
 	}
 	
 	@Override

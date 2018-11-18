@@ -1,19 +1,27 @@
 package uet.oop.bomberman.entities.character.enemy.ai.search_state;
 
+import uet.oop.bomberman.Board;
 import uet.oop.bomberman.entities.bomb.Bomb;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AIMid {
-    public double x, y;
+    public int x, y;
     public ArrayList<BombInfo> listBomb = new ArrayList<>();
     public ArrayList<Integer> directions = new ArrayList<>();
     public boolean explode;
 
-    public AIMid(AIMid aiMid, double _x, double _y, int dir) {
+    public AIMid(AIMid aiMid) {
+        this.x = aiMid.x;
+        this.y = aiMid.y;
+        this.directions.addAll(aiMid.directions);
+        this.explode = false;
+    }
+
+    public AIMid(AIMid aiMid, int _x, int _y, int dir, Board board) {
         for (BombInfo bombInfo: aiMid.listBomb) {
-            this.listBomb.add(new BombInfo(bombInfo));
+            this.listBomb.add(new BombInfo(bombInfo, board));
         }
         this.directions.addAll(aiMid.directions);
         this.directions.add(dir);
@@ -24,13 +32,14 @@ public class AIMid {
         this.explode = false;
     }
 
-    public AIMid(double x, double y, List<Bomb> bombs) {
+    public AIMid(int x, int y, List<Bomb> bombs, Board board) {
         for (Bomb bomb: bombs) {
-            this.listBomb.add(new BombInfo(bomb));
+            this.listBomb.add(new BombInfo(bomb, board));
         }
         this.x = x;
         this.y = y;
         this.explode = false;
+
         for (BombInfo bombInfo: this.listBomb) {
             this.explode |= bombInfo.exploding;
         }

@@ -44,8 +44,8 @@ public class Board implements IRender {
 		_screen = screen;
 		
 		loadLevel(1); //start in level 1
-		System.out.println(_levelLoader.getWidth());
-		System.out.println(_levelLoader.getHeight());
+//		System.out.println(_levelLoader.getWidth());
+//		System.out.println(_levelLoader.getHeight());
 	}
 	
 	@Override

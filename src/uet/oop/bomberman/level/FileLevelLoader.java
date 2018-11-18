@@ -50,7 +50,7 @@ public class FileLevelLoader extends LevelLoader {
 			scanner.nextLine();
 			for (int i = 0; i < _height; i++) {
 				String line = scanner.nextLine();
-				System.out.println(line);
+//				System.out.println(line);
 				for (int j = 0; j < _width; j++) {
 					_map[i][j] = line.charAt(j);
 				}

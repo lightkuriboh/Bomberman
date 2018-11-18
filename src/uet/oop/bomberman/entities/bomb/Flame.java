@@ -37,6 +37,20 @@ public class Flame extends Entity {
 		createFlameSegments();
 	}
 
+    public Flame(int x, int y, int direction, int radius, Board board, boolean Try) {
+        xOrigin = x;
+        yOrigin = y;
+        _x = x;
+        _y = y;
+        _direction = direction;
+        _radius = radius;
+        _board = board;
+    }
+
+	public int flameLength() {
+		return this._flameSegments.length;
+	}
+
 	private int calcX() {
 		int x = 0;
 		if (_direction == 1) {
@@ -68,7 +82,7 @@ public class Flame extends Entity {
 		 */
 		_flameSegments = new FlameSegment[calculatePermitedDistance()+1];
 
-		/**
+		/**explode
 		 * biến last dùng để đánh dấu cho segment cuối cùng
 		 */
 		boolean last;
@@ -115,7 +129,7 @@ public class Flame extends Entity {
 	 * Tính toán độ dài của Flame, nếu gặp vật cản là Brick/Wall, độ dài sẽ bị cắt ngắn
 	 * @return
 	 */
-	private int calculatePermitedDistance() {
+	public int calculatePermitedDistance() {
 		// TODO: thực hiện tính toán độ dài của Flame
 		int x = calcX();
 		int y = calcY();

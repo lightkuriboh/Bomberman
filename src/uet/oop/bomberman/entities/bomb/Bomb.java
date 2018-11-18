@@ -25,6 +25,12 @@ public class Bomb extends AnimatedEntitiy {
 		_board = board;
 		_sprite = Sprite.bomb;
 		_radius=radius;
+		_flames = new Flame[0];
+	}
+
+	public int getFlameNumber() {
+
+		return this._flames.length;
 	}
 
 	public Flame getFlameAt(int idx) {
@@ -53,9 +59,10 @@ public class Bomb extends AnimatedEntitiy {
 
 	@Override
 	public void update() {
-		if(_timeToExplode > 0) 
+		if(_timeToExplode > 0) {
+//			System.out.println(_timeToExplode + " bomb");
 			_timeToExplode--;
-		else {
+		} else {
 			if(!_exploded) 
 				explode();
 			else {

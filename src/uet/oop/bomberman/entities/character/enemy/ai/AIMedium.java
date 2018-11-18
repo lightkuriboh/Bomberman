@@ -23,7 +23,7 @@ public class AIMedium extends AI {
 	private Bomber _bomber;
 	private Enemy _e;
 	private Board _board;
-	private final int limit = 1000;
+	private final int limit = 100;
 	int[] dx = new int[4];
 	int[] dy = new int[4];
 	
@@ -35,12 +35,12 @@ public class AIMedium extends AI {
 		dy[0] = -1; dy[1] = 0; dy[2] = 1; dy[3] = 0;
 	}
 
-	public boolean inFlame(Sprite _sprite, double x, double y, ArrayList<BombInfo> bombs) {
+	public boolean inFlame(Sprite _sprite, int x, int y, ArrayList<BombInfo> bombs) {
 		int width = this._board.getWidth();
 		int height = this._board.getHeight();
-		boolean[][] canMove = new boolean[width][height];
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
+		boolean[][] canMove = new boolean[height][width];
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
 				canMove[i][j] = true;
 			}
 		}
@@ -49,42 +49,33 @@ public class AIMedium extends AI {
 		3		1
 			2
 		*/
-
 		for (BombInfo bomb: bombs) {
 			if (bomb.exploding) {
+//				System.out.println("there is bomb exploding");
 				for (int i = 0; i < 4; i++) {
-					int len = bomb.segmentLenght[i];
-					for (int j = 1; j <= len; j++) {
+					int len = new Flame(bomb.x, bomb.y, i, bomb.radius, this._board, false).calculatePermitedDistance();
+
+					for (int j = 0; j <= len; j++) {
 						int xxx = bomb.x + j * dx[i];
 						int yyy = bomb.y + j * dy[i];
 						if (xxx > -1 && xxx < width && yyy > -1 && yyy < height) {
-							canMove[xxx][yyy] = false;
+							canMove[yyy][xxx] = false;
 						}
 					}
 				}
 			}
 		}
 
-		int xx0= Coordinates.pixelToTile(x);
-		int yy0=(Coordinates.pixelToTile(y)-1);
+//		for (int i = 0; i < height; i++) {
+//			for (int j = 0; j < width; j++) {
+//				System.out.print(canMove[i][j] + " ");
+//			}
+//			System.out.println();
+//		}
+//		System.out.println(x + " " + y);
+//		System.out.println("------------------------------------------");
 
-		if (!canMove[xx0][yy0]) return true;
-
-		int xx1=Coordinates.pixelToTile(x+ _sprite.get_realWidth()-1);
-		int yy1=(Coordinates.pixelToTile(y)-1);
-
-		if (!canMove[xx1][yy1]) return true;
-
-		int xx2=Coordinates.pixelToTile(x);
-		int yy2=(Coordinates.pixelToTile(y+_sprite.get_realHeight()-1)-1);
-
-		if (!canMove[xx2][yy2]) return true;
-
-		int xx3=Coordinates.pixelToTile(x+_sprite.get_realWidth()-1);
-		int yy3=(Coordinates.pixelToTile(y+_sprite.get_realHeight()-1)-1);
-
-		if (!canMove[xx3][yy3]) return true;
-
+		if (!canMove[y][x]) return true;
 		return false;
 	}
 
@@ -92,16 +83,20 @@ public class AIMedium extends AI {
 	public int calculateDirection() {
 		// TODO: cài đặt thuật toán tìm đường đi
 
+//		System.out.println(this._e.getX() + " " + this._e.getY());
+//		if (this._board.getBombs().size() > 0) {
+//			System.out.println(_board.getBombs().get(0).get_timeToExplode() + " time bomb");
+//		}
+//		System.out.println("-------------------------------------------------");
 
+		int width = this._board.getWidth();
+		int height = this._board.getHeight();
 
-		int width = this._board.getWidth() * Game.TILES_SIZE;
-		int height = this._board.getHeight() * Game.TILES_SIZE;
+		boolean[][] canMove = new boolean[height][width];
 
-		boolean[][] canMove = new boolean[width + Game.TILES_SIZE + 1][height + Game.TILES_SIZE + 1];
-
-		for (int i = 0; i < width + Game.TILES_SIZE + 1; i++) {
-			for (int j = 0; j < height + Game.TILES_SIZE + 1; j++) {
-				canMove[i][j] = true;
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				canMove[j][i] = true;
 			}
 		}
 
@@ -116,36 +111,47 @@ public class AIMedium extends AI {
 		ArrayList<AIMid> queue = new ArrayList<>();
 		ArrayList<AIMid> candidate = new ArrayList<>();
 
-		queue.add(new AIMid(this._e.getX(), this._e.getY(), bombs));
+		double centerX = this._e.getX() + this._e.getSprite().get_realWidth() / 2;
+		double centerY = this._e.getY() + this._e.getSprite().get_realHeight() / 2;
+		int tileX = Coordinates.pixelToTile(centerX);
+		int tileY = Coordinates.pixelToTile(centerY) - 1;
+//		System.out.println(tileX + " " + tileY);
+		queue.add(new AIMid(tileX, tileY, bombs, this._board));
 
 		Sprite _sprite = this._e.getSprite();
 
 		int cnt = 0;
 
+		//System.out.println(Coordinates.pixelToTile(this._bomber.getX() + _bomber.getSprite().get_realWidth()/2) + " " + Coordinates.pixelToTile(this._bomber.getY() + _bomber.getSprite().get_realHeight() / 2));
+
 		while (queue.size() > 0) {
 			AIMid cur = queue.get(0);
 			queue.remove(0);
 
-			if (cur.explode && inFlame(_sprite, cur.x, cur.y, cur.listBomb)) {
-				break;
+			if (cur.explode) {
+//				System.out.println("Bomb exploding!");
+				if (inFlame(_sprite, cur.x, cur.y, cur.listBomb)) {
+//					System.out.println("In Flame!");
+					continue;
+				}
+
 			}
 
-			candidate.add(cur);
+			candidate.add(new AIMid(cur));
 
+			/*
+				0
+			3		1
+				2
+			 */
 			for (int dir = 0; dir < 4; dir++) {
-				double newX = cur.x + dx[dir] * this._e.get_speed();
-				double newY = cur.y + dy[dir] * this._e.get_speed();
-				System.out.print(cur.x);
-				System.out.print(" ");
-				System.out.print(cur.y);
-				System.out.print(" | ");
-				System.out.print(newX);
-				System.out.print(" ");
-				System.out.println(newY);
-				if (this._e.canMove(newX, newY)
-						&& (cur.directions.get(cur.directions.size() - 1) % 2 != dir % 2
-						|| cur.directions.get(cur.directions.size() - 1) != dir)) {
-					queue.add(new AIMid(cur, newX, newY, dir).update());
+				int newX = cur.x + dx[dir];
+				int newY = cur.y + dy[dir];
+
+				if (this._e.canMove(Coordinates.tileToPixel(newX), Coordinates.tileToPixel(newY + 1)) && canMove[newY][newX]) {
+
+					queue.add(new AIMid(cur, newX, newY, dir, this._board).update());
+					canMove[newY][newX] = false;
 				}
 			}
 
@@ -158,26 +164,42 @@ public class AIMedium extends AI {
 		AIMid ans = null;
 
 		if (candidate.isEmpty()) {
-			return new Random().nextInt();
-		}
-		if (ans.directions.isEmpty()) {
-			return new Random().nextInt();
+
+			return new Random().nextInt(4);
 		}
 
 		double minDist = -1;
 
+
+
 		for (AIMid aiMid: candidate) {
-			double mahatan = Math.abs(ans.x - _bomber.getX()) + Math.abs(ans.y - _bomber.getY());
-			if (minDist == -1) {
+			double mahatan = Math.abs(Coordinates.tileToPixel(aiMid.x) - _bomber.getX()) +
+					Math.abs(Coordinates.tileToPixel(aiMid.y) - _bomber.getY());
+			if (minDist == -1 && aiMid.directions.size() > 0) {
 				ans = aiMid;
 				minDist = mahatan;
 			} else {
-				if (mahatan < minDist) {
+				if (mahatan < minDist && aiMid.directions.size() > 0) {
 					minDist = mahatan;
 					ans = aiMid;
 				}
 			}
+
 		}
+
+//		System.out.println(this._e.getX() + " " + this._e.getY());
+//		if (this._board.getBombs().size() > 0) {
+//			System.out.println(_board.getBombs().get(0).get_timeToExplode() + " time bomb");
+//		}
+//		System.out.println("-------------------------------------------------copy");
+
+		if (minDist == -1) {
+			return new Random().nextInt(4);
+		}
+		if (ans.directions.isEmpty()) {
+			return new Random().nextInt(4);
+		}
+
 		return ans.directions.get(0);
 	}
 
