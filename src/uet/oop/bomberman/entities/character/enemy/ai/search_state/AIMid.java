@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities.character.enemy.ai.search_state;
 
 import uet.oop.bomberman.Board;
 import uet.oop.bomberman.entities.bomb.Bomb;
+import uet.oop.bomberman.entities.character.enemy.Enemy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +20,9 @@ public class AIMid {
         this.explode = false;
     }
 
-    public AIMid(AIMid aiMid, int _x, int _y, int dir, Board board) {
+    public AIMid(AIMid aiMid, int _x, int _y, int dir, Board board, Enemy _e) {
         for (BombInfo bombInfo: aiMid.listBomb) {
-            this.listBomb.add(new BombInfo(bombInfo, board));
+            this.listBomb.add(new BombInfo(bombInfo, board, _e));
         }
         this.directions.addAll(aiMid.directions);
         this.directions.add(dir);
@@ -32,9 +33,9 @@ public class AIMid {
         this.explode = false;
     }
 
-    public AIMid(int x, int y, List<Bomb> bombs, Board board) {
+    public AIMid(int x, int y, List<Bomb> bombs, Board board, Enemy _e) {
         for (Bomb bomb: bombs) {
-            this.listBomb.add(new BombInfo(bomb, board));
+            this.listBomb.add(new BombInfo(bomb, board, _e));
         }
         this.x = x;
         this.y = y;

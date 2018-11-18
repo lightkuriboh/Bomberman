@@ -10,7 +10,7 @@ import uet.oop.bomberman.graphics.Sprite;
 public class Kuriboh extends Enemy {
 
     public Kuriboh(int x, int y, Board board) {
-        super(x, y, board, Sprite.minvo_dead, Game.getBomberSpeed() / 0.75, 200);
+        super(x, y, board, Sprite.minvo_dead, Game.getBomberSpeed() / 0.9, 200);
 
         _sprite = Sprite.balloom_left1;
 

@@ -55,7 +55,6 @@ public class AIMedium extends AI {
 		for (BombInfo bomb: bombs) {
 			if (bomb.exploding) {
 				for (int i = 0; i < 4; i++) {
-//					int len = new Flame(bomb.x, bomb.y, i, bomb.radius, this._board, false).calculatePermitedDistance();
 					int len = Flame.calculatePermitedDistance(bomb.x, bomb.y, this._board, bomb.radius, i);
 					for (int j = 0; j <= len; j++) {
 						int xxx = bomb.x + j * dx[i];
@@ -118,7 +117,7 @@ public class AIMedium extends AI {
 		int tileX = Coordinates.pixelToTile(centerX);
 		int tileY = Coordinates.pixelToTile(centerY) - 1;
 //		System.out.println(tileX + " " + tileY);
-		queue.add(new AIMid(tileX, tileY, bombs, this._board));
+		queue.add(new AIMid(tileX, tileY, bombs, this._board, this._e));
 
 		Sprite _sprite = this._e.getSprite();
 
@@ -152,7 +151,7 @@ public class AIMedium extends AI {
 
 				if (this._e.canMove(Coordinates.tileToPixel(newX), Coordinates.tileToPixel(newY + 1)) && canMove[newY][newX]) {
 //					System.out.println(newX + " " + newY + " new");
-					queue.add(new AIMid(cur, newX, newY, dir, this._board).update());
+					queue.add(new AIMid(cur, newX, newY, dir, this._board, this._e).update());
 					canMove[newY][newX] = false;
 				}
 			}
