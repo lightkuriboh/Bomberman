@@ -24,8 +24,7 @@ public class AIMedium extends AI {
 	private Enemy _e;
 	private Board _board;
 	private final int limit = 100;
-	private int[] dx = new int[4];
-	private int[] dy = new int[4];
+
 	private boolean smart = false;
 
 	
@@ -33,8 +32,6 @@ public class AIMedium extends AI {
 		_bomber = bomber;
 		_e = e;
 		_board = board;
-		dx[0] = 0; dx[1] = 1; dx[2] = 0; dx[3] = -1;
-		dy[0] = -1; dy[1] = 0; dy[2] = 1; dy[3] = 0;
 		this.smart = smart;
 	}
 
@@ -176,6 +173,9 @@ public class AIMedium extends AI {
 		for (AIMid aiMid: candidate) {
 			double mahatan = Math.abs(Coordinates.tileToPixel(aiMid.x) - _bomber.getX()) +
 					Math.abs(Coordinates.tileToPixel(aiMid.y) - _bomber.getY());
+			if (this.smart) {
+				mahatan = AI.shortestPath(this._e, this._bomber, aiMid.x, aiMid.y, this._board);
+			}
 			if (minDist == -1 && aiMid.directions.size() > 0) {
 				ans = aiMid;
 				minDist = mahatan;

@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Bomb extends AnimatedEntitiy {
 
-	protected double _timeToExplode = 90; //1.5 seconds
+	protected double _timeToExplode = 120; //1.5 seconds
 	public int _timeAfter = 25;
 	protected List<Character> curChar = new ArrayList<>();
 	protected Board _board;
