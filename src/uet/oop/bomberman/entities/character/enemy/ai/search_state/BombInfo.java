@@ -37,7 +37,7 @@ public class BombInfo {
 
     public void update() {
         this.timeToExplode -= 32;
-        this.exploding = (this.timeToExplode <= (double)66 * (double)Game.getBomberSpeed() / (double)this.e.get_speed());
-        this.exploded = (this.timeToExplode < -64);
+        this.exploding = (this.timeToExplode <= (double)36 * (double)Game.getBomberSpeed() / (double)this.e.get_speed());
+        this.exploded = (this.timeToExplode < -31);
     }
 }

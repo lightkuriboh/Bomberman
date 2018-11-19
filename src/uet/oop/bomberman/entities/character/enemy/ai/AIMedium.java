@@ -174,7 +174,10 @@ public class AIMedium extends AI {
 			double mahatan = Math.abs(Coordinates.tileToPixel(aiMid.x) - _bomber.getX()) +
 					Math.abs(Coordinates.tileToPixel(aiMid.y) - _bomber.getY());
 			if (this.smart) {
-				mahatan = AI.shortestPath(this._e, this._bomber, aiMid.x, aiMid.y, this._board);
+				int cur = AI.shortestPath(this._e, this._bomber, aiMid.x, aiMid.y, this._board);
+				if (cur != AI.oo) {
+					mahatan = cur;
+				}
 			}
 			if (minDist == -1 && aiMid.directions.size() > 0) {
 				ans = aiMid;
