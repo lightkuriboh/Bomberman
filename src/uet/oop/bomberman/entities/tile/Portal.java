@@ -12,7 +12,7 @@ public class Portal extends Tile {
 	
 	@Override
 	public boolean collide(Entity e) {
-		SoundPlayer.playCheerSound();
+//		SoundPlayer.playCheerSound();
 		// TODO: xử lý khi Bomber đi vào
 		return super.collide(e);
 	}
