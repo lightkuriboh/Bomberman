@@ -109,10 +109,22 @@ public abstract class Enemy extends Character {
 						x = 0;
 						y = 0;
 					}
+		double newX = x + _x;
+		double newY = y + _y;
+		if (Coordinates.tileToPixel(Coordinates.pixelToTile(newX)+1)-newX<_speed)
+			newX=Coordinates.tileToPixel(Coordinates.pixelToTile(newX)+1);
+		if (Coordinates.tileToPixel(Coordinates.pixelToTile(newY)+1)-newY<_speed)
+			newY=Coordinates.tileToPixel(Coordinates.pixelToTile(newY)+1);
+		if (newX-Coordinates.tileToPixel(Coordinates.pixelToTile(newX))<_speed)
+			newX=Coordinates.tileToPixel(Coordinates.pixelToTile(newX));
+		if (newY-Coordinates.tileToPixel(Coordinates.pixelToTile(newY))<_speed)
+			newY=Coordinates.tileToPixel(Coordinates.pixelToTile(newY));
 
-		if (canMove(_x + x, _y + y)) {
+
+
+		if (canMove(newX, newY)) {
 			_steps -= 1 + rest;
-			move(x, y);
+			move(newX - _x, newY - _y);
 			_moving = true;
 		} else {
 			_steps = 0;
