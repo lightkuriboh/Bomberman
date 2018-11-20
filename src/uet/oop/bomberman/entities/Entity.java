@@ -79,7 +79,7 @@ public abstract class Entity implements IRender {
                 Double.toString(yy) + " " +
                 Double.toString(y1)+" " +
                 Double.toString(yy1));*/
-		if (Math.min(xx1,x1)>=Math.max(x,xx)&&Math.min(yy1,y1)>=Math.max(y,yy)) return false; else return true;
+		if (Math.min(xx1,x1)+1>=Math.max(x,xx)&&Math.min(yy1,y1)+1>=Math.max(y,yy)) return false; else return true;
 	};
 	
 	public double getX() {
