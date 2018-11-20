@@ -13,6 +13,8 @@ public class BombInfo {
     public boolean exploding;
     public boolean exploded;
     public Board board;
+    public boolean notDie = true;
+    public boolean explode = false;
     private Enemy e;
 
     public BombInfo(BombInfo bombInfo, Board _board, Enemy _e) {
@@ -37,7 +39,9 @@ public class BombInfo {
 
     public void update() {
         this.timeToExplode -= 32;
-        this.exploding = (this.timeToExplode <= (double)36 * (double)Game.getBomberSpeed() / (double)this.e.get_speed());
+        this.exploding = (this.timeToExplode <= (double)32 * (double)Game.getBomberSpeed() / (double)this.e.get_speed());
         this.exploded = (this.timeToExplode < -31);
+        this.notDie = this.timeToExplode > 0;
+        this.explode = this.timeToExplode == 0;
     }
 }

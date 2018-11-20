@@ -9,6 +9,7 @@ import java.util.List;
 
 public class AIMid {
     public int x, y;
+    public int pre_x, pre_y;
     public ArrayList<BombInfo> listBomb = new ArrayList<>();
     public ArrayList<Integer> directions = new ArrayList<>();
     public boolean explode;
@@ -16,6 +17,8 @@ public class AIMid {
     public AIMid(AIMid aiMid) {
         this.x = aiMid.x;
         this.y = aiMid.y;
+        this.pre_x = aiMid.pre_x;
+        this.pre_y = aiMid.pre_y;
         this.directions.addAll(aiMid.directions);
         this.explode = false;
     }
@@ -29,6 +32,9 @@ public class AIMid {
 
         this.x = _x;
         this.y = _y;
+
+        this.pre_x = aiMid.x;
+        this.pre_y = aiMid.y;
 
         this.explode = false;
     }

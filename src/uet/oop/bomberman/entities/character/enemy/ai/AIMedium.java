@@ -35,7 +35,7 @@ public class AIMedium extends AI {
 		this.smart = smart;
 	}
 
-	public boolean inFlame(Sprite _sprite, int x, int y, ArrayList<BombInfo> bombs) {
+	public boolean inFlame(Sprite _sprite, int x, int y, int pre_x, int pre_y, ArrayList<BombInfo> bombs) {
 		int width = this._board.getWidth();
 		int height = this._board.getHeight();
 		boolean[][] canMove = new boolean[height][width];
@@ -49,8 +49,11 @@ public class AIMedium extends AI {
 		3		1
 			2
 		*/
+		boolean closer = false;
+
 		for (BombInfo bomb: bombs) {
 			if (bomb.exploding) {
+				closer |= AI.shortestPath(this._e, bomb.x, bomb.y, x, y, _board) < AI.shortestPath(this._e, bomb.x, bomb.y, pre_x, pre_y, _board);
 				for (int i = 0; i < 4; i++) {
 					int len = Flame.calculatePermitedDistance(bomb.x, bomb.y, this._board, bomb.radius, i);
 					for (int j = 0; j <= len; j++) {
@@ -73,7 +76,7 @@ public class AIMedium extends AI {
 //		System.out.println(x + " " + y);
 //		System.out.println("------------------------------------------");
 
-		if (!canMove[y][x]) return true;
+		if (!canMove[y][x] && closer) return true;
 		return false;
 	}
 
@@ -128,8 +131,8 @@ public class AIMedium extends AI {
 
 			if (cur.explode) {
 //				System.out.println("Bomb exploding!");
-				if (this.smart && inFlame(_sprite, cur.x, cur.y, cur.listBomb)) {
-//					System.out.println("In Flame!");
+				if (this.smart && inFlame(_sprite, cur.x, cur.y, cur.pre_x, cur.pre_y, cur.listBomb)) {
+					System.out.println(queue.size() + " In Flame!");
 					continue;
 				}
 
@@ -147,7 +150,7 @@ public class AIMedium extends AI {
 				int newY = cur.y + dy[dir];
 
 				if (this._e.canMove(Coordinates.tileToPixel(newX), Coordinates.tileToPixel(newY + 1)) && canMove[newY][newX]) {
-//					System.out.println(newX + " " + newY + " new");
+
 					queue.add(new AIMid(cur, newX, newY, dir, this._board, this._e).update());
 					canMove[newY][newX] = false;
 				}
@@ -174,7 +177,7 @@ public class AIMedium extends AI {
 			double mahatan = Math.abs(Coordinates.tileToPixel(aiMid.x) - _bomber.getX()) +
 					Math.abs(Coordinates.tileToPixel(aiMid.y) - _bomber.getY());
 			if (this.smart) {
-				int cur = AI.shortestPath(this._e, this._bomber, aiMid.x, aiMid.y, this._board);
+				int cur = AI.shortestPath(this._e, Coordinates.pixelToTile(this._bomber.getX()), Coordinates.pixelToTile(this._bomber.getY()), aiMid.x, aiMid.y, this._board);
 				if (cur != AI.oo) {
 					mahatan = cur;
 				}
@@ -190,15 +193,9 @@ public class AIMedium extends AI {
 			}
 
 		}
-
-//		System.out.println(this._e.getX() + " " + this._e.getY());
-//		if (this._board.getBombs().size() > 0) {
-//			System.out.println(_board.getBombs().get(0).get_timeToExplode() + " time bomb");
-//		}
-//		System.out.println("-------------------------------------------------copy");
+		System.out.println(candidate.size());
 
 		if (minDist == -1) {
-//			return new Random().nextInt(4);
 			return -1;
 		}
 

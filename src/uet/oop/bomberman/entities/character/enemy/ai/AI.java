@@ -30,7 +30,7 @@ public abstract class AI {
 		dy[0] = -1; dy[1] = 0; dy[2] = 1; dy[3] = 0;
 	}
 
-	public static int shortestPath(Enemy _e, Bomber _bomber, int x, int y, Board _board) {
+	public static int shortestPath(Enemy _e, int startX, int startY, int x, int y, Board _board) {
 		int[] dx = new int[4];
 		int[] dy = new int[4];
 
@@ -46,9 +46,6 @@ public abstract class AI {
 				canMove[j][i] = true;
 			}
 		}
-
-		int startX = Coordinates.pixelToTile(_bomber.getX() + _bomber.getSprite().get_realWidth() / 2);
-		int startY = Coordinates.pixelToTile(_bomber.getY() + _bomber.getSprite().get_realHeight()/ 2) - 1;
 		ArrayList<BFSState> queue = new ArrayList<>();
 		queue.add(new BFSState(startX, startY, 0));
 		while (queue.size() > 0) {
