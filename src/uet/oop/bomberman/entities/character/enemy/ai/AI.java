@@ -58,7 +58,7 @@ public abstract class AI {
 				int newX = cur.x + dx[dir];
 				int newY = cur.y + dy[dir];
 
-				if (_e.canMove(Coordinates.tileToPixel(newX), Coordinates.tileToPixel(newY + 1)) && canMove[newY][newX]) {
+				if (-1 < newY && -1 < newX && newY < height && newX < width && _e.canMove(Coordinates.tileToPixel(newX), Coordinates.tileToPixel(newY + 1)) && canMove[newY][newX]) {
 					queue.add(new BFSState(newX, newY, cur.path + 1));
 					canMove[newY][newX] = false;
 				}
