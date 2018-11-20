@@ -76,7 +76,10 @@ public class Bomber extends Character {
         int yy = Coordinates.pixelToTile(_y+_sprite.get_realHeight()/2-1)-1;
         int pos = yy * _board.getWidth() + xx;
         if (_board._entities[pos] instanceof Portal) {
-                if (_board.detectNoEnemies()) _board.endGame();
+                if (_board.detectNoEnemies()) {
+                    SoundPlayer.playCheerSound();
+                    _board.nextLevel();
+                }
         }
 
     }
@@ -327,7 +330,7 @@ public class Bomber extends Character {
         // TODO: xử lý va chạm với Flame
         // TODO: xử lý va chạm với Enemy
         boolean res = super.collide(e);
-        //System.out.println(res);
+
         if (!res) {
             if (e instanceof Enemy) {this.kill();} else
             if (e instanceof FlameSegment) {

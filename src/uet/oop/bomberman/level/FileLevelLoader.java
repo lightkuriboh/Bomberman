@@ -39,6 +39,7 @@ public class FileLevelLoader extends LevelLoader {
 		try {
 			FileReader fileReader = new FileReader("res/" + "levels/Level" + Integer.toString(level) + ".txt");
 			Scanner scanner = new Scanner(fileReader);
+
 			_level = scanner.nextInt();
 
 			_height = scanner.nextInt();
@@ -61,6 +62,7 @@ public class FileLevelLoader extends LevelLoader {
 
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
+
 		}
 	}
 

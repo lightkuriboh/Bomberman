@@ -20,12 +20,12 @@ public class Game extends Canvas {
 							WIDTH = TILES_SIZE * (33 / 2),
 							HEIGHT = 13 * TILES_SIZE;
 
-	public static int SCALE = 2;
+	public static int SCALE = 3;
 	
 	public static final String TITLE = "BombermanGame";
 	
 	private static final int BOMBRATE = 3;
-	private static final int BOMBRADIUS = 1;
+	private static final int BOMBRADIUS = 3;
 	private static final double BOMBERSPEED = 1.0;
 	
 	public static final int TIME = 200;

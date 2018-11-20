@@ -90,7 +90,7 @@ public abstract class Enemy extends Character {
 
 		if (_steps <= 0) {
 			_direction = _ai.calculateDirection();
-			//System.out.println(_direction + " dir");
+			System.out.println(_direction + " dir");
 			_steps = MAX_STEPS;
 		}
 
