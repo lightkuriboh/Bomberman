@@ -22,7 +22,6 @@ import java.util.List;
 public class Bomber extends Character {
 
     private List<Bomb> _bombs;
-    protected Keyboard _input;
     /**
      * nếu giá trị này < 0 thì cho phép đặt đối tượng Bomb tiếp theo,
      * cứ mỗi lần đặt 1 Bomb mới, giá trị này sẽ được reset về 0 và giảm dần trong mỗi lần update()
@@ -31,14 +30,24 @@ public class Bomber extends Character {
     protected  int _bombRad;
     protected  double _speed;
     protected  int _bombRate;
-    public Bomber(int x, int y, Board board) {
+    protected String _name;
+
+
+    public static int DIR_LEFT = 1<<3;
+    public static int DIR_RIGHT = 1<<1;
+    public static int DIR_UP = 1<<0;
+    public static int DIR_DOWN = 1<<2;
+    public static int DIR_BOMB = 1<<4;
+    protected int dirState;
+
+    public Bomber(int x, int y, Board board, String name) {
         super(x, y, board);
         _bombs = _board.getBombs();
-        _input = _board.getInput();
         _sprite = Sprite.player_right;
         _bombRad = Game.getBombRadius();
         _speed = Game.getBomberSpeed();
         _bombRate = Game.getBombRate();
+        _name = name;
     }
 
     @Override
@@ -159,7 +168,7 @@ public class Bomber extends Character {
         // TODO: _timeBetweenPutBombs dùng để ngăn chặn Bomber đặt 2 Bomb cùng tại 1 vị trí trong 1 khoảng thời gian quá ngắn
         // TODO: nếu 3 điều kiện trên thỏa mãn thì thực hiện đặt bom bằng placeBomb()
         // TODO: sau khi đặt, nhớ giảm số lượng Bomb Rate và reset _timeBetweenPutBombs về 0
-        if (_input.space && _bombRate > 0 && _timeBetweenPutBombs < -15) {
+        if ((dirState & DIR_BOMB) == DIR_BOMB && _bombRate > 0 && _timeBetweenPutBombs < -15) {
             int xx=Coordinates.pixelToTile(_x+_sprite.get_realWidth()/2-1);
             int yy=(Coordinates.pixelToTile(_y+_sprite.get_realHeight()/2-1)-1);
             placeBomb(xx, yy);
@@ -194,27 +203,42 @@ public class Bomber extends Character {
         }
     }
 
+    public int getDirState() {
+        return dirState;
+    }
+
+    public void setDirState(int dirState) {
+        this.dirState = dirState;
+    }
+
+    public String get_name() {
+        return _name;
+    }
+
+    public void set_name(String _name) {
+        this._name = _name;
+    }
+
     @Override
     protected void calculateMove() {
         // TODO: xử lý nhận tín hiệu điều khiển hướng đi từ _input và gọi move() để thực hiện di chuyển
         // TODO: nhớ cập nhật lại giá trị cờ _moving khi thay đổi trạng thái di chuyển
-        this._input.update();
         double newX=this._x;
         double newY=this._y;
         this._moving=false;
-        if (this._input.up) {
+        if ((dirState & DIR_UP) == DIR_UP) {
             newY-=_speed;
             this._moving=true;
         }
-        if (this._input.down) {
+        if ((dirState & DIR_DOWN) == DIR_DOWN) {
             newY+=_speed;
             this._moving=true;
         }
-        if (this._input.left) {
+        if ((dirState & DIR_LEFT) == DIR_LEFT) {
             newX-=_speed;
             this._moving=true;
         }
-        if (this._input.right) {
+        if ((dirState & DIR_RIGHT) == DIR_RIGHT) {
             newX+=_speed;
             this._moving=true;
         }

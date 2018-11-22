@@ -132,7 +132,7 @@ public class AIMedium extends AI {
 			if (cur.explode) {
 //				System.out.println("Bomb exploding!");
 				if (this.smart && inFlame(_sprite, cur.x, cur.y, cur.pre_x, cur.pre_y, cur.listBomb)) {
-					System.out.println(queue.size() + " In Flame!");
+					//System.out.println(queue.size() + " In Flame!");
 					continue;
 				}
 

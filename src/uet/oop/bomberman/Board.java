@@ -51,7 +51,6 @@ public class Board implements IRender {
 	@Override
 	public void update() {
 		if( _game.isPaused() ) return;
-		
 		updateEntities();
 		updateCharacters();
 		updateBombs();
@@ -296,6 +295,27 @@ public class Board implements IRender {
 			g.drawString(m.getMessage(), (int)m.getX() - Screen.xOffset  * Game.SCALE, (int)m.getY());
 		}
 	}
+
+	protected void updateKeyBoard(Bomber bomber) {
+		_input.update();
+		int dirState = 0;
+		if (bomber.get_name().equals("player1")) {
+			if (_input.W) dirState |= Bomber.DIR_UP;
+			if (_input.D) dirState |= Bomber.DIR_RIGHT;
+			if (_input.A) dirState |= Bomber.DIR_LEFT;
+			if (_input.S) dirState |= Bomber.DIR_DOWN;
+			if (_input.space) dirState |= Bomber.DIR_BOMB;
+		} else {
+			if (_input.down) dirState |= Bomber.DIR_DOWN;
+			if (_input.up) dirState |= Bomber.DIR_UP;
+			if (_input.left) dirState |= Bomber.DIR_LEFT;
+			if (_input.right) dirState |= Bomber.DIR_RIGHT;
+			if (_input.enter) dirState |= Bomber.DIR_BOMB;
+		}
+		//System.out.println(dirState);
+		bomber.setDirState(dirState);
+
+	}
 	
 	protected void updateEntities() {
 		if( _game.isPaused() ) return;
@@ -308,8 +328,11 @@ public class Board implements IRender {
 		if( _game.isPaused() ) return;
 		Iterator<Character> itr = _characters.iterator();
 		
-		while(itr.hasNext() && !_game.isPaused())
-			itr.next().update();
+		while(itr.hasNext() && !_game.isPaused()) {
+			Character tmp = itr.next();
+			if (tmp instanceof Bomber) updateKeyBoard((Bomber) tmp);
+			tmp.update();
+		}
 	}
 	
 	protected void updateBombs() {
