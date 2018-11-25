@@ -28,13 +28,14 @@ public class Board implements IRender {
 	protected Game _game;
 	protected Keyboard _input;
 	protected Screen _screen;
-	
+
+	protected int _bomberNum = 0;
 	public Entity[] _entities;
 	public List<Character> _characters = new ArrayList<>();
 	protected List<Bomb> _bombs = new ArrayList<>();
 	private List<Message> _messages = new ArrayList<>();
 	private int _screenToShow = -1; //1:endgame, 2:changelevel, 3:paused
-	
+
 	private int _time = Game.TIME;
 	private int _points = Game.POINTS;
 	
@@ -47,7 +48,7 @@ public class Board implements IRender {
 //		System.out.println(_levelLoader.getWidth());
 //		System.out.println(_levelLoader.getHeight());
 	}
-	
+
 	@Override
 	public void update() {
 		if( _game.isPaused() ) return;
@@ -240,7 +241,11 @@ public class Board implements IRender {
 		
 		return null;
 	}
-	
+
+	public int get_bomberNum() {
+		return _bomberNum;
+	}
+
 	public Entity getEntityAt(double x, double y) {
 		return _entities[(int)x + (int)y * _levelLoader.getWidth()];
 	}
@@ -259,7 +264,9 @@ public class Board implements IRender {
 		xx.addTop(e);
 	}
 
+
 	public void addCharacter(Character e) {
+		if (e instanceof Bomber) _bomberNum++;
 		_characters.add(e);
 	}
 	
@@ -312,7 +319,7 @@ public class Board implements IRender {
 			if (_input.right) dirState |= Bomber.DIR_RIGHT;
 			if (_input.enter) dirState |= Bomber.DIR_BOMB;
 		}
-		//System.out.println(dirState);
+		System.out.println(dirState);
 		bomber.setDirState(dirState);
 
 	}

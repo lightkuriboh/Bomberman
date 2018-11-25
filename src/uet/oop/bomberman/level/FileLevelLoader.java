@@ -88,7 +88,7 @@ public class FileLevelLoader extends LevelLoader {
 
 					case 'o':
 						_board.addCharacter( new Bomber(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board, "player2") );
-						Screen.setOffset(0, 0);
+
 						_board.addEntity(pos, new Grass(x, y, Sprite.grass));
 						break;
 
