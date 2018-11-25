@@ -1,5 +1,6 @@
 package uet.oop.bomberman;
 
+import uet.oop.bomberman.database.Mongo;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.LayeredEntity;
 import uet.oop.bomberman.entities.Message;
@@ -304,22 +305,82 @@ public class Board implements IRender {
 	}
 
 	protected void updateKeyBoard(Bomber bomber) {
+		/*
+			0
+		3		1
+			2
+		 */
+
 		_input.update();
 		int dirState = 0;
+
 		if (bomber.get_name().equals("player1")) {
-			if (_input.W) dirState |= Bomber.DIR_UP;
-			if (_input.D) dirState |= Bomber.DIR_RIGHT;
-			if (_input.A) dirState |= Bomber.DIR_LEFT;
-			if (_input.S) dirState |= Bomber.DIR_DOWN;
-			if (_input.space) dirState |= Bomber.DIR_BOMB;
+//			int other = Mongo.getAction("player1");
+//			if (other == 0) dirState |= Bomber.DIR_UP;
+//			if (other == 1) dirState |= Bomber.DIR_RIGHT;
+//			if (other == 2) dirState |= Bomber.DIR_DOWN;
+//			if (other == 3) dirState |= Bomber.DIR_LEFT;
+//			boolean bomb = Mongo.getBomb("player1");
+//			if (bomb) {ls
+
+//				dirState |= Bomber.DIR_BOMB;
+//				Mongo.putBomb("player1", false);
+//			}
+
+			if (_input.W) {
+				dirState |= Bomber.DIR_UP;
+				Mongo.updateAction("player1", 0);
+			}
+			if (_input.D) {
+				dirState |= Bomber.DIR_RIGHT;
+				Mongo.updateAction("player1", 1);
+			}
+			if (_input.A) {
+				dirState |= Bomber.DIR_LEFT;
+				Mongo.updateAction("player1", 3);
+			}
+			if (_input.S) {
+				dirState |= Bomber.DIR_DOWN;
+				Mongo.updateAction("player1", 2);
+			}
+			if (_input.space) {
+				dirState |= Bomber.DIR_BOMB;
+				Mongo.putBomb("player1", true);
+			}
 		} else {
-			if (_input.down) dirState |= Bomber.DIR_DOWN;
-			if (_input.up) dirState |= Bomber.DIR_UP;
-			if (_input.left) dirState |= Bomber.DIR_LEFT;
-			if (_input.right) dirState |= Bomber.DIR_RIGHT;
-			if (_input.enter) dirState |= Bomber.DIR_BOMB;
+			int other = Mongo.getAction("player2");
+			if (other == 0) dirState |= Bomber.DIR_UP;
+			if (other == 1) dirState |= Bomber.DIR_RIGHT;
+			if (other == 2) dirState |= Bomber.DIR_DOWN;
+			if (other == 3) dirState |= Bomber.DIR_LEFT;
+			boolean bomb = Mongo.getBomb("player2");
+			if (bomb) {
+				dirState |= Bomber.DIR_BOMB;
+				Mongo.putBomb("player2", false);
+			}
+
+//			if (_input.down) {
+//				dirState |= Bomber.DIR_DOWN;
+//				Mongo.updateAction("player2", 2);
+//			}
+//			if (_input.up) {
+//				dirState |= Bomber.DIR_UP;
+//				Mongo.updateAction("player2", 0);
+//			}
+//			if (_input.left) {
+//				dirState |= Bomber.DIR_LEFT;
+//				Mongo.updateAction("player2", 3);
+//			}
+//			if (_input.right) {
+//				dirState |= Bomber.DIR_RIGHT;
+//				Mongo.updateAction("player2", 1);
+//			}
+//			if (_input.enter) {
+//				dirState |= Bomber.DIR_BOMB;
+//				Mongo.putBomb("player2", true);
+//			}
 		}
-		System.out.println(dirState);
+//		System.out.println(dirState);
 		bomber.setDirState(dirState);
 
 	}
