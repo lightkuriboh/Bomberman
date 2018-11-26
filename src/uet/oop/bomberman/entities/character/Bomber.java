@@ -149,14 +149,14 @@ public class Bomber extends Character {
     public void calculateXOffset() {
         int xScroll = Screen.calculateXOffset(_board, this);
 
-        if (_board.get_bomberNum()==1) Screen.setOffset(xScroll, 0);
+        if (_name.equals("player1")) Screen.setOffset(xScroll, 0);
 
 //        System.out.println(Integer.toString(xScroll));
     }
 
     public void calculateYOffset() {
         int yScroll = Screen.calculateYOffset(_board, this);
-        if (_board.get_bomberNum()==1) Screen.setOffset(Screen.xOffset, yScroll);
+        if (_name.equals("player1")) Screen.setOffset(Screen.xOffset, yScroll);
     }
 
     /**
