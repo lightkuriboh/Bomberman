@@ -319,7 +319,7 @@ public class Board implements IRender {
 			if (_input.right) dirState |= Bomber.DIR_RIGHT;
 			if (_input.enter) dirState |= Bomber.DIR_BOMB;
 		}
-		System.out.println(dirState);
+//		System.out.println(dirState);
 		bomber.setDirState(dirState);
 
 	}

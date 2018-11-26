@@ -61,6 +61,23 @@ public class AIMid {
                 this.listBomb.remove(i);
             }
         }
+        boolean found = true;
+        while (found) {
+            found = false;
+            for (int i = 0; i < this.listBomb.size(); i++) {
+                if (this.listBomb.get(i).exploding) {
+                    for (int j = 0; j < this.listBomb.size(); j++) {
+                        if (i != j && !this.listBomb.get(j).exploding) {
+                            if (this.listBomb.get(i).x == this.listBomb.get(j).x
+                                    || this.listBomb.get(i).y == this.listBomb.get(j).y) {
+                                this.listBomb.get(j).exploding = true;
+                                found = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return this;
     }
 }

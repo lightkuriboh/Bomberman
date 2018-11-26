@@ -125,7 +125,7 @@ public class Game extends Canvas {
 		
 		long  lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
-		final double ns = 1000000000.0 / 60.0; //nanosecond, 60 frames per second
+		final double ns = 1500000000.0 / 60.0; //nanosecond, 60 frames per second
 		double delta = 0;
 		int frames = 0;
 		int updates = 0;

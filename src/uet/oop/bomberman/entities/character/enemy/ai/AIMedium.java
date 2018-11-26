@@ -26,13 +26,15 @@ public class AIMedium extends AI {
 	private final int limit = 100;
 
 	private boolean smart = false;
+	private boolean optimal = false;
 
 	
-	public AIMedium(Board board, Bomber bomber, Enemy e, boolean smart) {
+	public AIMedium(Board board, Bomber bomber, Enemy e, boolean optimal, boolean smart) {
 		_bomber = bomber;
 		_e = e;
 		_board = board;
 		this.smart = smart;
+		this.optimal = optimal;
 	}
 
 	public boolean inFlame(Sprite _sprite, int x, int y, int pre_x, int pre_y, ArrayList<BombInfo> bombs) {
@@ -53,7 +55,7 @@ public class AIMedium extends AI {
 
 		for (BombInfo bomb: bombs) {
 			if (bomb.exploding) {
-				closer |= AI.shortestPath(this._e, bomb.x, bomb.y, x, y, _board) < AI.shortestPath(this._e, bomb.x, bomb.y, pre_x, pre_y, _board);
+				closer |= (bomb.x == x || bomb.y == y) && AI.shortestPath(this._e, bomb.x, bomb.y, x, y, _board) < AI.shortestPath(this._e, bomb.x, bomb.y, pre_x, pre_y, _board);
 				for (int i = 0; i < 4; i++) {
 					int len = Flame.calculatePermitedDistance(bomb.x, bomb.y, this._board, bomb.radius, i);
 					for (int j = 0; j <= len; j++) {
@@ -176,7 +178,7 @@ public class AIMedium extends AI {
 		for (AIMid aiMid: candidate) {
 			double mahatan = Math.abs(Coordinates.tileToPixel(aiMid.x) - _bomber.getX()) +
 					Math.abs(Coordinates.tileToPixel(aiMid.y) - _bomber.getY());
-			if (this.smart) {
+			if (this.optimal) {
 				int cur = AI.shortestPath(this._e, Coordinates.pixelToTile(this._bomber.getX()), Coordinates.pixelToTile(this._bomber.getY()), aiMid.x, aiMid.y, this._board);
 				if (cur != AI.oo) {
 					mahatan = cur;
@@ -193,7 +195,7 @@ public class AIMedium extends AI {
 			}
 
 		}
-		System.out.println(candidate.size());
+//		System.out.println(candidate.size());
 
 		if (minDist == -1) {
 			return -1;
