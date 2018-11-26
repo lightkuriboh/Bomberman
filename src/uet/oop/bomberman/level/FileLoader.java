@@ -1,5 +1,6 @@
 package uet.oop.bomberman.level;
 
+import signal.GameStart;
 import uet.oop.bomberman.Board;
 import uet.oop.bomberman.Game;
 import uet.oop.bomberman.entities.LayeredEntity;
@@ -20,7 +21,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Scanner;
 
-public class FileLevelLoader extends LevelLoader {
+public class FileLoader extends MapLoader {
 
 	/**
 	 * Ma trận chứa thông tin bản đồ, mỗi phần tử lưu giá trị kí tự đọc được
@@ -28,42 +29,21 @@ public class FileLevelLoader extends LevelLoader {
 	 */
 	private static char[][] _map;
 
-	public FileLevelLoader(Board board, int level) throws LoadLevelException {
-		super(board, level);
+	public FileLoader(Board board, GameStart gameStart) throws LoadLevelException {
+		super(board, gameStart);
 	}
 	
 	@Override
-	public void loadLevel(int level) {
+	public void loadLevel(GameStart gameStart) {
 		// TODO: đọc dữ liệu từ tệp cấu hình /levels/Level{level}.txt
 		// TODO: cập nhật các giá trị đọc được vào _width, _height, _level, _map
-		try {
-			FileReader fileReader = new FileReader("res/" + "levels/Level" + Integer.toString(level) + ".txt");
-			Scanner scanner = new Scanner(fileReader);
-
-			_level = scanner.nextInt();
-
-			_height = scanner.nextInt();
-			_width = scanner.nextInt();
-
-			_map = new char[_height][_width];
-
-			scanner.nextLine();
-			for (int i = 0; i < _height; i++) {
-				String line = scanner.nextLine();
-//				System.out.println(line);
-				for (int j = 0; j < _width; j++) {
-					_map[i][j] = line.charAt(j);
-				}
-			}
-			scanner.close();
-			fileReader.close();
 
 
+			_height = gameStart.get_height();
+			_width = gameStart.get_width();
 
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			_map = gameStart.get_map();
 
-		}
 	}
 
 	@Override

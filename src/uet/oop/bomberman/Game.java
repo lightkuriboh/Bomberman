@@ -66,9 +66,28 @@ public class Game extends Canvas {
 		
 		screen = new Screen(WIDTH, HEIGHT);
 		_input = new Keyboard();
-		
+
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			System.out.println("Pleast input your name: ");
+			String name = br.readLine();
+
+			System.out.println("Input port you want to connect: ");
+			int port = Integer.parseInt(br.readLine());
+
+			_client = new Client("localhost",port,name,_input);
+			_client.connect();
+			_id = _client.getId();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		while (!_client.started()) {
+		}
+
 		_board = new Board(this, _input, screen,_client);
 		addKeyListener(_input);
+
 
 		try {
 			SoundPlayer.initSoundData();
@@ -131,22 +150,6 @@ public class Game extends Canvas {
 	public void start() {
 
 		_running = true;
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("Pleast input your name: ");
-			String name = br.readLine();
-
-			System.out.println("Input port you want to connect: ");
-			int port = Integer.parseInt(br.readLine());
-
-			_client = new Client("localhost",port,name,_input);
-			_client.connect();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		while (!_client.started()) {
-		}
 
 
 		long  lastTime = System.nanoTime();

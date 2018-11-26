@@ -1,9 +1,9 @@
 package client;
+import signal.GameStart;
 import signal.PlayerMove;
-import uet.oop.bomberman.Game;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.input.Keyboard;
-
+import uet.oop.bomberman.Game;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -23,9 +23,11 @@ public class Client implements Runnable {
     private boolean running = false;
     private EventListener listener;
     public String name;
-    private String info = "";
+    private int id;
     boolean started;
     protected Keyboard input;
+    protected GameStart gameStart;
+
 
     private List<Integer> moveCmd = new ArrayList<>();
 
@@ -76,15 +78,6 @@ public class Client implements Runnable {
             e.printStackTrace();
         }
     }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
     @Override
     public void run() {
         try {
@@ -92,7 +85,7 @@ public class Client implements Runnable {
             while (running)
                 try {
                     Object data = in.readObject();
-                    listener.received(info, data);
+                    listener.received(data);
                     if (started) {
                         input.update();
                         Integer dirState = 0;
@@ -125,7 +118,8 @@ public class Client implements Runnable {
         return moveCmd;
     }
 
-    public void startGame() {
+    public void startGame(GameStart gameStart) {
+        this.gameStart = gameStart;
         started = true;
         for(int i=0;i< Game.get_players();i++) moveCmd.add(0);
     }
@@ -134,5 +128,16 @@ public class Client implements Runnable {
         return this.started;
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public GameStart getGameStart() {
+        return gameStart;
+    }
 }
+

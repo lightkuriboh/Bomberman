@@ -1,6 +1,7 @@
 package uet.oop.bomberman;
 
 import client.Client;
+import signal.GameStart;
 import signal.PlayerMove;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.LayeredEntity;
@@ -14,8 +15,8 @@ import uet.oop.bomberman.graphics.IRender;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.input.Keyboard;
 import uet.oop.bomberman.level.Coordinates;
-import uet.oop.bomberman.level.FileLevelLoader;
-import uet.oop.bomberman.level.LevelLoader;
+import uet.oop.bomberman.level.MapLoader;
+import uet.oop.bomberman.level.FileLoader;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.List;
  * Quản lý thao tác điều khiển, load level, render các màn hình của game
  */
 public class Board implements IRender {
-	protected LevelLoader _levelLoader;
+	protected MapLoader _MapLoader;
 	protected Game _game;
 	protected Keyboard _input;
 	protected Screen _screen;
@@ -49,8 +50,8 @@ public class Board implements IRender {
 		_screen = screen;
 		_client = client;
 		loadLevel(1); //start in level 1
-//		System.out.println(_levelLoader.getWidth());
-//		System.out.println(_levelLoader.getHeight());
+//		System.out.println(_MapLoader.getWidth());
+//		System.out.println(_MapLoader.getHeight());
 	}
 
 	@Override
@@ -74,12 +75,12 @@ public class Board implements IRender {
 		if( _game.isPaused() ) return;
 
 		int szx = screen.getWidth();
-		if (_levelLoader.getWidth() * Game.TILES_SIZE < szx) {
-			szx = (_levelLoader.getWidth() - 1) * Game.TILES_SIZE;
+		if (_MapLoader.getWidth() * Game.TILES_SIZE < szx) {
+			szx = (_MapLoader.getWidth() - 1) * Game.TILES_SIZE;
 		}
 		int szy = screen.getHeight();
-		if (_levelLoader.getHeight() * Game.TILES_SIZE < szy) {
-			szy = (_levelLoader.getHeight()) * Game.TILES_SIZE;
+		if (_MapLoader.getHeight() * Game.TILES_SIZE < szy) {
+			szy = (_MapLoader.getHeight()) * Game.TILES_SIZE;
 		}
 		//only render the visible part of screen
 		int x0 = Screen.xOffset >> 4; //tile precision, -> left X
@@ -90,8 +91,8 @@ public class Board implements IRender {
 
 		for (int y = y0; y < y1; y++) {
 			for (int x = x0; x < x1; x++) {
-				if (x + y * _levelLoader.getWidth() < _levelLoader.getWidth() * _levelLoader.getHeight()) {
-					_entities[x + y * _levelLoader.getWidth()].
+				if (x + y * _MapLoader.getWidth() < _MapLoader.getWidth() * _MapLoader.getHeight()) {
+					_entities[x + y * _MapLoader.getWidth()].
 							render(
 									screen
 							);
@@ -105,8 +106,8 @@ public class Board implements IRender {
 	}
 	
 	public void nextLevel() {
-		if (_levelLoader.getLevel() == Game.get_levelNum()) endGame(); else
-		loadLevel(_levelLoader.getLevel() + 1);
+		if (_MapLoader.getLevel() == Game.get_levelNum()) endGame(); else
+		loadLevel(_MapLoader.getLevel() + 1);
 	}
 	
 	public void loadLevel(int level) {
@@ -119,10 +120,10 @@ public class Board implements IRender {
 		_messages.clear();
 		
 		try {
-			_levelLoader = new FileLevelLoader(this, level);
-			_entities = new Entity[_levelLoader.getHeight() * _levelLoader.getWidth()];
+			_MapLoader = new FileLoader(this,_client.getGameStart());
+			_entities = new Entity[_MapLoader.getHeight() * _MapLoader.getWidth()];
 			
-			_levelLoader.createEntities();
+			_MapLoader.createEntities();
 		} catch (LoadLevelException e) {
 			endGame();
 		}
@@ -155,7 +156,7 @@ public class Board implements IRender {
 				_screen.drawEndGame(g, _points);
 				break;
 			case 2:
-				_screen.drawChangeLevel(g, _levelLoader.getLevel());
+				_screen.drawChangeLevel(g, _MapLoader.getLevel());
 				break;
 			case 3:
 				_screen.drawPaused(g);
@@ -253,7 +254,7 @@ public class Board implements IRender {
 	}
 
 	public Entity getEntityAt(double x, double y) {
-		return _entities[(int)x + (int)y * _levelLoader.getWidth()];
+		return _entities[(int)x + (int)y * _MapLoader.getWidth()];
 	}
 	
 	public void addEntity(int pos, Entity e) {
@@ -370,8 +371,8 @@ public class Board implements IRender {
 		return _input;
 	}
 
-	public LevelLoader getLevel() {
-		return _levelLoader;
+	public MapLoader getLevel() {
+		return _MapLoader;
 	}
 
 	public Game getGame() {
@@ -399,11 +400,11 @@ public class Board implements IRender {
 	}
 	
 	public int getWidth() {
-		return _levelLoader.getWidth();
+		return _MapLoader.getWidth();
 	}
 
 	public int getHeight() {
-		return _levelLoader.getHeight();
+		return _MapLoader.getHeight();
 	}
 	
 }

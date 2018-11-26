@@ -1,5 +1,7 @@
 package server;
 
+import signal.AssignId;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,11 +14,14 @@ public class Connection implements  Runnable{
     private ObjectInputStream in;
     private int id;
     private Server server;
+    private boolean idAssigned = false;
+    private ServerListener serverListener;
 
-    public Connection(Socket socket, Server server) {
+    public Connection(Socket socket, Server server, ServerListener serverListener) {
         this.socket = socket;
-        id = 0;
+        id = -1;
         this.server = server;
+        this.serverListener = serverListener;
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
@@ -30,10 +35,15 @@ public class Connection implements  Runnable{
         try {
             while (socket.isConnected()) {
                 System.out.println();
+                if (!idAssigned) {
+                    AssignId data = new AssignId(id);
+                    sendObject(data);
+                    idAssigned = true;
+                }
                 try {
                     Object data = in.readObject();
+                    serverListener.handle(id, data);
                     //System.out.println((String)data);
-                    server.sendDataToAll(data);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -42,6 +52,7 @@ public class Connection implements  Runnable{
         }catch (IOException e) {
             e.printStackTrace();
         }
+        close();
     }
 
     public void close() {
@@ -61,5 +72,13 @@ public class Connection implements  Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -11,9 +11,9 @@ public class EventListener {
         this._client = _client;
     }
 
-    public void received(String res, Object data) {
+    public void received(Object data) {
         if (data instanceof GameStart) {
-            _client.startGame();
+            _client.startGame((GameStart) data);
         }
         if (data instanceof PlayerMove) {
             _client.updateCmd((PlayerMove)data);

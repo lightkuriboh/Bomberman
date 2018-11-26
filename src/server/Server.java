@@ -1,5 +1,7 @@
 package server;
 
+import signal.GameStart;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,9 +12,15 @@ public class Server implements Runnable {
     private int port;
     private boolean running = false;
     private ServerSocket serverSocket;
-    List<Connection> connectionList = new ArrayList<>();
-    public Server(int port) {
+    private String mapPath = "C:\\Users\\MSI\\Documents\\GitHub\\Bomberman\\res\\levels\\level1.txt";
+    private List<Connection> connectionList = new ArrayList<>();
+    private List<Integer> cmdList = new ArrayList<>();
+    private ServerListener serverListener = new ServerListener(this);
+    private int Max_players;
+    private GameStart gameStart = new GameStart(mapPath);
+    public Server(int port, int mp) {
         this.port = port;
+        this.Max_players = mp;
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -38,9 +46,13 @@ public class Server implements Runnable {
     }
 
     private void initSocket(Socket socket) {
-        Connection connection = new Connection(socket, this);
+        Connection connection = new Connection(socket, this, serverListener);
+        connection.setId(connectionList.size()-1);
         connectionList.add(connection);
+        cmdList.add(0);
         new Thread(connection).start();
+        if (connectionList.size() == Max_players) sendDataToAll(gameStart);
+        System.out.println(connectionList.size());
     }
 
     public void shutdown() {
@@ -53,11 +65,13 @@ public class Server implements Runnable {
     }
 
     public void sendDataToAll(Object packet) {
-        //System.out.println("mmm");
-        System.out.println((String)packet);
         for(int i=0;i<connectionList.size();i++) {
             connectionList.get(i).sendObject(packet);
         }
+    }
+
+    public void updateMove(int id,int dirState) {
+        cmdList.set(id,dirState);
     }
 
 }
