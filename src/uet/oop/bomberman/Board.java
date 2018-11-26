@@ -356,7 +356,7 @@ public class Board implements IRender {
 			if (((other >> 3) & 1) > 0) dirState |= Bomber.DIR_LEFT;
 			if (((other >> 4) & 1) > 0) {
 				dirState |= Bomber.DIR_BOMB;
-				Mongo.putBomb("player2", false);
+				//Mongo.putBomb("player2", false);
 			}
 //			int updateState = 0;
 //			if (_input.down) {

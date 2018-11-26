@@ -69,7 +69,7 @@ public class Mongo {
     public static void ping() {
         mongoClient = null;
         try {
-            mongoClient = new MongoClient(new MongoClientURI("mongodb://127.0.0.1:27017"));
+            mongoClient = new MongoClient(new MongoClientURI("mongodb://192.168.43.70:27017"));
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
