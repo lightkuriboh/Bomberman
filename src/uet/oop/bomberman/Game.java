@@ -1,5 +1,6 @@
 package uet.oop.bomberman;
 
+import client.Client;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.gui.Frame;
 import uet.oop.bomberman.input.Keyboard;
@@ -8,6 +9,10 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import uet.oop.bomberman.sound.SoundPlayer;
 
 /**
@@ -50,7 +55,11 @@ public class Game extends Canvas {
 	
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
-	
+
+	protected Client _client;
+	protected static int _players = 0;
+	protected static int _id;
+	protected static int _levelNum = 4;
 	public Game(Frame frame) {
 		_frame = frame;
 		_frame.setTitle(TITLE);
@@ -58,7 +67,7 @@ public class Game extends Canvas {
 		screen = new Screen(WIDTH, HEIGHT);
 		_input = new Keyboard();
 		
-		_board = new Board(this, _input, screen);
+		_board = new Board(this, _input, screen,_client);
 		addKeyListener(_input);
 
 		try {
@@ -122,7 +131,24 @@ public class Game extends Canvas {
 	public void start() {
 
 		_running = true;
-		
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			System.out.println("Pleast input your name: ");
+			String name = br.readLine();
+
+			System.out.println("Input port you want to connect: ");
+			int port = Integer.parseInt(br.readLine());
+
+			_client = new Client("localhost",port,name,_input);
+			_client.connect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		while (!_client.started()) {
+		}
+
+
 		long  lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
 		final double ns = 1000000000.0 / 60.0; //nanosecond, 60 frames per second
@@ -168,8 +194,25 @@ public class Game extends Canvas {
 					--_screenDelay;
 			}
 		}
+		_client.close();
 	}
-	
+
+	public static int get_id() {
+		return _id;
+	}
+
+	public static void set_id(int _id) {
+		Game._id = _id;
+	}
+
+	public static int get_levelNum() {
+		return _levelNum;
+	}
+
+	public static void add_players() { _players++;}
+
+	public static int get_players() { return _players;}
+
 	public static double getBomberSpeed() {
 		return bomberSpeed;
 	}

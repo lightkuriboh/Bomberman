@@ -1,5 +1,7 @@
 package uet.oop.bomberman;
 
+import client.Client;
+import signal.PlayerMove;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.LayeredEntity;
 import uet.oop.bomberman.entities.Message;
@@ -36,14 +38,16 @@ public class Board implements IRender {
 	private List<Message> _messages = new ArrayList<>();
 	private int _screenToShow = -1; //1:endgame, 2:changelevel, 3:paused
 
+	protected List<Integer> _dirList = new ArrayList<>();
+	protected Client _client;
 	private int _time = Game.TIME;
 	private int _points = Game.POINTS;
 	
-	public Board(Game game, Keyboard input, Screen screen) {
+	public Board(Game game, Keyboard input, Screen screen, Client client) {
 		_game = game;
 		_input = input;
 		_screen = screen;
-		
+		_client = client;
 		loadLevel(1); //start in level 1
 //		System.out.println(_levelLoader.getWidth());
 //		System.out.println(_levelLoader.getHeight());
@@ -52,6 +56,7 @@ public class Board implements IRender {
 	@Override
 	public void update() {
 		if( _game.isPaused() ) return;
+		updateCommand();
 		updateEntities();
 		updateCharacters();
 		updateBombs();
@@ -100,6 +105,7 @@ public class Board implements IRender {
 	}
 	
 	public void nextLevel() {
+		if (_levelLoader.getLevel() == Game.get_levelNum()) endGame(); else
 		loadLevel(_levelLoader.getLevel() + 1);
 	}
 	
@@ -304,23 +310,7 @@ public class Board implements IRender {
 	}
 
 	protected void updateKeyBoard(Bomber bomber) {
-		_input.update();
-		int dirState = 0;
-		if (bomber.get_name().equals("player1")) {
-			if (_input.W) dirState |= Bomber.DIR_UP;
-			if (_input.D) dirState |= Bomber.DIR_RIGHT;
-			if (_input.A) dirState |= Bomber.DIR_LEFT;
-			if (_input.S) dirState |= Bomber.DIR_DOWN;
-			if (_input.space) dirState |= Bomber.DIR_BOMB;
-		} else {
-			if (_input.down) dirState |= Bomber.DIR_DOWN;
-			if (_input.up) dirState |= Bomber.DIR_UP;
-			if (_input.left) dirState |= Bomber.DIR_LEFT;
-			if (_input.right) dirState |= Bomber.DIR_RIGHT;
-			if (_input.enter) dirState |= Bomber.DIR_BOMB;
-		}
-		System.out.println(dirState);
-		bomber.setDirState(dirState);
+		bomber.setDirState(_dirList.get(bomber.get_id()));
 
 	}
 	
@@ -370,6 +360,10 @@ public class Board implements IRender {
 			return this._time;
 		else
 			return this._time--;
+	}
+
+	private void updateCommand() {
+		_dirList = _client.getMoveCmd();
 	}
 
 	public Keyboard getInput() {

@@ -30,7 +30,7 @@ public class Bomber extends Character {
     protected  int _bombRad;
     protected  double _speed;
     protected  int _bombRate;
-    protected String _name;
+    protected int _id;
 
 
     public static int DIR_LEFT = 1<<3;
@@ -40,14 +40,14 @@ public class Bomber extends Character {
     public static int DIR_BOMB = 1<<4;
     protected int dirState;
 
-    public Bomber(int x, int y, Board board, String name) {
+    public Bomber(int x, int y, Board board, int id) {
         super(x, y, board);
         _bombs = _board.getBombs();
         _sprite = Sprite.player_right;
         _bombRad = Game.getBombRadius();
         _speed = Game.getBomberSpeed();
         _bombRate = Game.getBombRate();
-        _name = name;
+        _id=id;
     }
 
     @Override
@@ -148,14 +148,14 @@ public class Bomber extends Character {
     public void calculateXOffset() {
         int xScroll = Screen.calculateXOffset(_board, this);
 
-        if (_board.get_bomberNum()==1) Screen.setOffset(xScroll, 0);
+        if (this._id==Game.get_id()) Screen.setOffset(xScroll, 0);
 
 //        System.out.println(Integer.toString(xScroll));
     }
 
     public void calculateYOffset() {
         int yScroll = Screen.calculateYOffset(_board, this);
-        if (_board.get_bomberNum()==1) Screen.setOffset(Screen.xOffset, yScroll);
+        if (this._id==Game.get_id())  Screen.setOffset(Screen.xOffset, yScroll);
     }
 
     /**
@@ -211,12 +211,12 @@ public class Bomber extends Character {
         this.dirState = dirState;
     }
 
-    public String get_name() {
-        return _name;
+    public int get_id() {
+        return _id;
     }
 
-    public void set_name(String _name) {
-        this._name = _name;
+    public void set_id(int _id) {
+        this._id = _id;
     }
 
     @Override

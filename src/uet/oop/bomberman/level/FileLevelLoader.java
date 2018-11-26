@@ -73,7 +73,7 @@ public class FileLevelLoader extends LevelLoader {
 
 		// TODO: phần code mẫu ở dưới để hướng dẫn cách thêm các loại Entity vào game
 		// TODO: hãy xóa nó khi hoàn thành chức năng load màn chơi từ tệp cấu hình
-
+		Screen.setOffset(0, 0);
 		for (int x = 0; x < _width; ++x) {
 			for (int y = 0; y < _height; ++y) {
 				char c = _map[y][x];
@@ -81,15 +81,31 @@ public class FileLevelLoader extends LevelLoader {
 				switch (c) {
 
 					case 'p':
-						_board.addCharacter( new Bomber(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board, "player1") );
-						Screen.setOffset(0, 0);
 						_board.addEntity(pos, new Grass(x, y, Sprite.grass));
+						if (_board.get_bomberNum()<1)  break;
+						_board.addCharacter( new Bomber(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board, 0) );
+
 						break;
 
 					case 'o':
-						_board.addCharacter( new Bomber(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board, "player2") );
-
 						_board.addEntity(pos, new Grass(x, y, Sprite.grass));
+						if (_board.get_bomberNum()<2) break;
+						_board.addCharacter( new Bomber(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board, 1) );
+
+						break;
+
+					case 'k':
+						_board.addEntity(pos, new Grass(x, y, Sprite.grass));
+						if (_board.get_bomberNum()<3) break;
+						_board.addCharacter( new Bomber(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board, 1) );
+
+						break;
+
+					case 'l':
+						_board.addEntity(pos, new Grass(x, y, Sprite.grass));
+						if (_board.get_bomberNum()<4) break;
+						_board.addCharacter( new Bomber(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board, 1) );
+
 						break;
 
 					case '1':
