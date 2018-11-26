@@ -25,7 +25,7 @@ public class Game extends Canvas {
 	public static final String TITLE = "BombermanGame";
 	
 	private static final int BOMBRATE = 3;
-	private static final int BOMBRADIUS = 3;
+	private static final int BOMBRADIUS = 1;
 	private static final double BOMBERSPEED = 1.0;
 	
 	public static final int TIME = 200;

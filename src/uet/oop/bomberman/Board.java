@@ -346,8 +346,11 @@ public class Board implements IRender {
 		if( _game.isPaused() ) return;
 		Iterator<Bomb> itr = _bombs.iterator();
 		
-		while(itr.hasNext())
-			itr.next().update();
+		while(itr.hasNext()) {
+			Bomb b = itr.next();
+			if (b.isRemoved()) itr.remove();
+			b.update();
+		}
 	}
 	
 	protected void updateMessages() {
