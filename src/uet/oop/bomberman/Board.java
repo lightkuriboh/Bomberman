@@ -315,39 +315,7 @@ public class Board implements IRender {
 		int dirState = 0;
 
 		if (bomber.get_name().equals("player1")) {
-			int other = Mongo.getAction("player1");
-			if (((other >> 0) & 1) > 0) dirState |= Bomber.DIR_UP;
-			if (((other >> 1) & 1) > 0) dirState |= Bomber.DIR_RIGHT;
-			if (((other >> 2) & 1) > 0) dirState |= Bomber.DIR_DOWN;
-			if (((other >> 3) & 1) > 0) dirState |= Bomber.DIR_LEFT;
-			if (((other >> 4) & 1) > 0) {
-				dirState |= Bomber.DIR_BOMB;
-			}
-
-//			int updateState = 0;
-//			if (_input.W) {
-//				dirState |= Bomber.DIR_UP;
-//				updateState |= Bomber.DIR_UP;
-//			}
-//			if (_input.D) {
-//				dirState |= Bomber.DIR_RIGHT;
-//				updateState |= Bomber.DIR_RIGHT;
-//			}
-//			if (_input.A) {
-//				dirState |= Bomber.DIR_LEFT;
-//				updateState |= Bomber.DIR_LEFT;
-//			}
-//			if (_input.S) {
-//				dirState |= Bomber.DIR_DOWN;
-//				updateState |= Bomber.DIR_DOWN;
-//			}
-//			if (_input.space) {
-//				dirState |= Bomber.DIR_BOMB;
-//				updateState |= Bomber.DIR_BOMB;
-//			}
-//			Mongo.updateAction("player1", updateState);
-		} else {
-//			int other = Mongo.getAction("player2");
+//			int other = Mongo.getAction("player1");
 //			if (((other >> 0) & 1) > 0) dirState |= Bomber.DIR_UP;
 //			if (((other >> 1) & 1) > 0) dirState |= Bomber.DIR_RIGHT;
 //			if (((other >> 2) & 1) > 0) dirState |= Bomber.DIR_DOWN;
@@ -356,29 +324,61 @@ public class Board implements IRender {
 //				dirState |= Bomber.DIR_BOMB;
 //			}
 
-
 			int updateState = 0;
-			if (_input.down) {
-				dirState |= Bomber.DIR_DOWN;
-				updateState |= Bomber.DIR_DOWN;
-			}
-			if (_input.up) {
+			if (_input.W) {
 				dirState |= Bomber.DIR_UP;
 				updateState |= Bomber.DIR_UP;
 			}
-			if (_input.left) {
-				dirState |= Bomber.DIR_LEFT;
-				updateState |= Bomber.DIR_LEFT;
-			}
-			if (_input.right) {
+			if (_input.D) {
 				dirState |= Bomber.DIR_RIGHT;
 				updateState |= Bomber.DIR_RIGHT;
 			}
-			if (_input.enter) {
+			if (_input.A) {
+				dirState |= Bomber.DIR_LEFT;
+				updateState |= Bomber.DIR_LEFT;
+			}
+			if (_input.S) {
+				dirState |= Bomber.DIR_DOWN;
+				updateState |= Bomber.DIR_DOWN;
+			}
+			if (_input.space) {
 				dirState |= Bomber.DIR_BOMB;
 				updateState |= Bomber.DIR_BOMB;
 			}
-			Mongo.updateAction("player2", updateState);
+			Mongo.updateAction("player1", updateState);
+		} else {
+			int other = Mongo.getAction("player2");
+			if (((other >> 0) & 1) > 0) dirState |= Bomber.DIR_UP;
+			if (((other >> 1) & 1) > 0) dirState |= Bomber.DIR_RIGHT;
+			if (((other >> 2) & 1) > 0) dirState |= Bomber.DIR_DOWN;
+			if (((other >> 3) & 1) > 0) dirState |= Bomber.DIR_LEFT;
+			if (((other >> 4) & 1) > 0) {
+				dirState |= Bomber.DIR_BOMB;
+			}
+
+
+//			int updateState = 0;
+//			if (_input.down) {
+//				dirState |= Bomber.DIR_DOWN;
+//				updateState |= Bomber.DIR_DOWN;
+//			}
+//			if (_input.up) {
+//				dirState |= Bomber.DIR_UP;
+//				updateState |= Bomber.DIR_UP;
+//			}
+//			if (_input.left) {
+//				dirState |= Bomber.DIR_LEFT;
+//				updateState |= Bomber.DIR_LEFT;
+//			}
+//			if (_input.right) {
+//				dirState |= Bomber.DIR_RIGHT;
+//				updateState |= Bomber.DIR_RIGHT;
+//			}
+//			if (_input.enter) {
+//				dirState |= Bomber.DIR_BOMB;
+//				updateState |= Bomber.DIR_BOMB;
+//			}
+//			Mongo.updateAction("player2", updateState);
 		}
 		bomber.setDirState(dirState);
 
@@ -406,8 +406,11 @@ public class Board implements IRender {
 		if( _game.isPaused() ) return;
 		Iterator<Bomb> itr = _bombs.iterator();
 
-		while(itr.hasNext())
-			itr.next().update();
+		while(itr.hasNext()) {
+			Bomb b = itr.next();
+			if (b.isRemoved()) itr.remove();
+			b.update();
+		}
 	}
 
 	protected void updateMessages() {

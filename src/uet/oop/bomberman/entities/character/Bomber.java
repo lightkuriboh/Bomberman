@@ -15,6 +15,7 @@ import uet.oop.bomberman.input.Keyboard;
 import uet.oop.bomberman.level.Coordinates;
 import uet.oop.bomberman.sound.SoundPlayer;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class Bomber extends Character {
 
     public Bomber(int x, int y, Board board, String name) {
         super(x, y, board);
-        _bombs = _board.getBombs();
+        _bombs = new ArrayList<>();
         _sprite = Sprite.player_right;
         _bombRad = Game.getBombRadius();
         _speed = Game.getBomberSpeed();
@@ -148,14 +149,14 @@ public class Bomber extends Character {
     public void calculateXOffset() {
         int xScroll = Screen.calculateXOffset(_board, this);
 
-        if (_board.get_bomberNum()==1) Screen.setOffset(xScroll, 0);
+        if (_name.equals("player1")) Screen.setOffset(xScroll, 0);
 
 //        System.out.println(Integer.toString(xScroll));
     }
 
     public void calculateYOffset() {
         int yScroll = Screen.calculateYOffset(_board, this);
-        if (_board.get_bomberNum()==1) Screen.setOffset(Screen.xOffset, yScroll);
+        if (_name.equals("player1")) Screen.setOffset(Screen.xOffset, yScroll);
     }
 
     /**
@@ -185,6 +186,7 @@ public class Bomber extends Character {
         // TODO: thực hiện tạo đối tượng bom, đặt vào vị trí (x, y)
 
         Bomb bomb = new Bomb(x, y, _board, _bombRad);
+        _bombs.add(bomb);
         _board.addBomb(bomb);
         _board.addLayeredEntity( y*(int)_board.getWidth()+x,bomb);
     }
