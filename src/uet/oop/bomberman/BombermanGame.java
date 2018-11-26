@@ -7,9 +7,6 @@ public class BombermanGame {
 	
 	public static void main(String[] args) {
 //		Mongo.ping();
-//		System.out.println(Mongo.getAction("player1"));
-//		Mongo.updateAction("player1", -1);
-//		System.out.println(Mongo.getAction("player1"));
 		new Frame();
 	}
 }

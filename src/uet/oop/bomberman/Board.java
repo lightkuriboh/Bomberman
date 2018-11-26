@@ -39,12 +39,12 @@ public class Board implements IRender {
 
 	private int _time = Game.TIME;
 	private int _points = Game.POINTS;
-	
+
 	public Board(Game game, Keyboard input, Screen screen) {
 		_game = game;
 		_input = input;
 		_screen = screen;
-		
+
 		loadLevel(1); //start in level 1
 //		System.out.println(_levelLoader.getWidth());
 //		System.out.println(_levelLoader.getHeight());
@@ -58,7 +58,7 @@ public class Board implements IRender {
 		updateBombs();
 		updateMessages();
 		detectEndGame();
-		
+
 		for (int i = 0; i < _characters.size(); i++) {
 			Character a = _characters.get(i);
 			if(a.isRemoved()) _characters.remove(i);
@@ -94,16 +94,16 @@ public class Board implements IRender {
 				}
 			}
 		}
-		
+
 		renderBombs(screen);
 		renderCharacter(screen);
-		
+
 	}
-	
+
 	public void nextLevel() {
 		loadLevel(_levelLoader.getLevel() + 1);
 	}
-	
+
 	public void loadLevel(int level) {
 		_time = Game.TIME;
 		_screenToShow = 2;
@@ -112,38 +112,38 @@ public class Board implements IRender {
 		_characters.clear();
 		_bombs.clear();
 		_messages.clear();
-		
+
 		try {
 			_levelLoader = new FileLevelLoader(this, level);
 			_entities = new Entity[_levelLoader.getHeight() * _levelLoader.getWidth()];
-			
+
 			_levelLoader.createEntities();
 		} catch (LoadLevelException e) {
 			endGame();
 		}
 	}
-	
+
 	protected void detectEndGame() {
 		if(_time <= 0)
 			endGame();
 	}
-	
+
 	public void endGame() {
 		_screenToShow = 1;
 		_game.resetScreenDelay();
 		_game.pause();
 	}
-	
+
 	public boolean detectNoEnemies() {
 		int total = 0;
 		for (int i = 0; i < _characters.size(); i++) {
 			if(_characters.get(i) instanceof Bomber == false)
 				++total;
 		}
-		
+
 		return total == 0;
 	}
-	
+
 	public void drawScreen(Graphics g) {
 		switch (_screenToShow) {
 			case 1:
@@ -157,29 +157,29 @@ public class Board implements IRender {
 				break;
 		}
 	}
-	
+
 	public Entity getEntity(double x, double y, Character m) {
-		
+
 		Entity res = null;
-		
+
 		res = getFlameSegmentAt((int)x, (int)y);
 		if( res != null) return res;
-		
+
 		res = getBombAt(x, y);
 		if( res != null) return res;
-		
+
 		res = getCharacterAtExcluding((int)x, (int)y, m);
 		if( ((LayeredEntity) res).isEmpty()) return res;
-		
+
 		res = getEntityAt((int)x, (int)y);
-		
+
 		return res;
 	}
-	
+
 	public List<Bomb> getBombs() {
 		return _bombs;
 	}
-	
+
 	public Bomb getBombAt(double x, double y) {
 		Iterator<Bomb> bs = _bombs.iterator();
 		Bomb b;
@@ -189,24 +189,24 @@ public class Board implements IRender {
 			if(b.getX() == (int)x && b.getY() == (int)y)
 				return b;
 		}
-		
+
 		return null;
 	}
 
 	public Bomber getBomber() {
 		Iterator<Character> itr = _characters.iterator();
-		
+
 		Character cur;
 		while(itr.hasNext()) {
 			cur = itr.next();
-			
+
 			if(cur instanceof Bomber)
 				return (Bomber) cur;
 		}
-		
+
 		return null;
 	}
-	
+
 	public LayeredEntity getCharacterAtExcluding(int x, int y, Character a) {
 		Iterator<Character> itr = _characters.iterator();
 		LayeredEntity res = new LayeredEntity(x,y);
@@ -224,22 +224,22 @@ public class Board implements IRender {
 				&&(Coordinates.pixelToTile(yy)-1==y|| Coordinates.pixelToTile(yy1)-1==y))
 					res.addTop(cur);
 		}
-		
+
 		if (res.isEmpty()) return null; else return res;
 	}
-	
+
 	public FlameSegment getFlameSegmentAt(int x, int y) {
 		Iterator<Bomb> bs = _bombs.iterator();
 		Bomb b;
 		while(bs.hasNext()) {
 			b = bs.next();
-			
+
 			FlameSegment e = b.flameAt(x, y);
 			if(e != null) {
 				return e;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -250,7 +250,7 @@ public class Board implements IRender {
 	public Entity getEntityAt(double x, double y) {
 		return _entities[(int)x + (int)y * _levelLoader.getWidth()];
 	}
-	
+
 	public void addEntity(int pos, Entity e) {
 		_entities[pos] = e;
 	}
@@ -270,34 +270,34 @@ public class Board implements IRender {
 		if (e instanceof Bomber) _bomberNum++;
 		_characters.add(e);
 	}
-	
+
 	public void addBomb(Bomb e) {
 		_bombs.add(e);
 	}
-	
+
 	public void addMessage(Message e) {
 		_messages.add(e);
 	}
 
 	protected void renderCharacter(Screen screen) {
 		Iterator<Character> itr = _characters.iterator();
-		
+
 		while(itr.hasNext())
 			itr.next().render(screen);
 	}
-	
+
 	protected void renderBombs(Screen screen) {
 		Iterator<Bomb> itr = _bombs.iterator();
-		
+
 		while(itr.hasNext())
 			itr.next().render(screen);
 	}
-	
+
 	public void renderMessages(Graphics g) {
 		Message m;
 		for (int i = 0; i < _messages.size(); i++) {
 			m = _messages.get(i);
-			
+
 			g.setFont(new Font("Arial", Font.PLAIN, m.getSize()));
 			g.setColor(m.getColor());
 			g.drawString(m.getMessage(), (int)m.getX() - Screen.xOffset  * Game.SCALE, (int)m.getY());
@@ -316,101 +316,102 @@ public class Board implements IRender {
 
 		if (bomber.get_name().equals("player1")) {
 //			int other = Mongo.getAction("player1");
-//			if (other == 0) dirState |= Bomber.DIR_UP;
-//			if (other == 1) dirState |= Bomber.DIR_RIGHT;
-//			if (other == 2) dirState |= Bomber.DIR_DOWN;
-//			if (other == 3) dirState |= Bomber.DIR_LEFT;
-//			boolean bomb = Mongo.getBomb("player1");
-//			if (bomb) {ls
-
+//			if (((other >> 0) & 1) > 0) dirState |= Bomber.DIR_UP;
+//			if (((other >> 1) & 1) > 0) dirState |= Bomber.DIR_RIGHT;
+//			if (((other >> 2) & 1) > 0) dirState |= Bomber.DIR_DOWN;
+//			if (((other >> 3) & 1) > 0) dirState |= Bomber.DIR_LEFT;
+//			if (((other >> 4) & 1) > 0) {
+//
 //				dirState |= Bomber.DIR_BOMB;
 //				Mongo.putBomb("player1", false);
 //			}
 
+			int updateState = 0;
 			if (_input.W) {
 				dirState |= Bomber.DIR_UP;
-				Mongo.updateAction("player1", 0);
+				updateState |= Bomber.DIR_UP;
 			}
 			if (_input.D) {
 				dirState |= Bomber.DIR_RIGHT;
-				Mongo.updateAction("player1", 1);
+				updateState |= Bomber.DIR_RIGHT;
 			}
 			if (_input.A) {
 				dirState |= Bomber.DIR_LEFT;
-				Mongo.updateAction("player1", 3);
+				updateState |= Bomber.DIR_LEFT;
 			}
 			if (_input.S) {
 				dirState |= Bomber.DIR_DOWN;
-				Mongo.updateAction("player1", 2);
+				updateState |= Bomber.DIR_DOWN;
 			}
 			if (_input.space) {
 				dirState |= Bomber.DIR_BOMB;
-				Mongo.putBomb("player1", true);
+				updateState |= Bomber.DIR_BOMB;
 			}
+			Mongo.updateAction("player1", updateState);
 		} else {
 			int other = Mongo.getAction("player2");
-			if (other == 0) dirState |= Bomber.DIR_UP;
-			if (other == 1) dirState |= Bomber.DIR_RIGHT;
-			if (other == 2) dirState |= Bomber.DIR_DOWN;
-			if (other == 3) dirState |= Bomber.DIR_LEFT;
-			boolean bomb = Mongo.getBomb("player2");
-			if (bomb) {
+			if (((other >> 0) & 1) > 0) dirState |= Bomber.DIR_UP;
+			if (((other >> 1) & 1) > 0) dirState |= Bomber.DIR_RIGHT;
+			if (((other >> 2) & 1) > 0) dirState |= Bomber.DIR_DOWN;
+			if (((other >> 3) & 1) > 0) dirState |= Bomber.DIR_LEFT;
+			if (((other >> 4) & 1) > 0) {
 				dirState |= Bomber.DIR_BOMB;
 				Mongo.putBomb("player2", false);
 			}
-
+//			int updateState = 0;
 //			if (_input.down) {
 //				dirState |= Bomber.DIR_DOWN;
-//				Mongo.updateAction("player2", 2);
+//				updateState |= Bomber.DIR_DOWN;
 //			}
 //			if (_input.up) {
 //				dirState |= Bomber.DIR_UP;
-//				Mongo.updateAction("player2", 0);
+//				updateState |= Bomber.DIR_UP;
 //			}
 //			if (_input.left) {
 //				dirState |= Bomber.DIR_LEFT;
-//				Mongo.updateAction("player2", 3);
+//				updateState |= Bomber.DIR_LEFT;
 //			}
 //			if (_input.right) {
 //				dirState |= Bomber.DIR_RIGHT;
-//				Mongo.updateAction("player2", 1);
+//				updateState |= Bomber.DIR_RIGHT;
 //			}
 //			if (_input.enter) {
 //				dirState |= Bomber.DIR_BOMB;
-//				Mongo.putBomb("player2", true);
+//				updateState |= Bomber.DIR_BOMB;
 //			}
+//			Mongo.updateAction("player2", updateState);
 		}
 //		System.out.println(dirState);
 		bomber.setDirState(dirState);
 
 	}
-	
+
 	protected void updateEntities() {
 		if( _game.isPaused() ) return;
 		for (int i = 0; i < _entities.length; i++) {
 			_entities[i].update();
 		}
 	}
-	
+
 	protected void updateCharacters() {
 		if( _game.isPaused() ) return;
 		Iterator<Character> itr = _characters.iterator();
-		
+
 		while(itr.hasNext() && !_game.isPaused()) {
 			Character tmp = itr.next();
 			if (tmp instanceof Bomber) updateKeyBoard((Bomber) tmp);
 			tmp.update();
 		}
 	}
-	
+
 	protected void updateBombs() {
 		if( _game.isPaused() ) return;
 		Iterator<Bomb> itr = _bombs.iterator();
-		
+
 		while(itr.hasNext())
 			itr.next().update();
 	}
-	
+
 	protected void updateMessages() {
 		if( _game.isPaused() ) return;
 		Message m;
@@ -418,8 +419,8 @@ public class Board implements IRender {
 		for (int i = 0; i < _messages.size(); i++) {
 			m = _messages.get(i);
 			left = m.getDuration();
-			
-			if(left > 0) 
+
+			if(left > 0)
 				m.setDuration(--left);
 			else
 				_messages.remove(i);
@@ -464,7 +465,7 @@ public class Board implements IRender {
 	public void addPoints(int points) {
 		this._points += points;
 	}
-	
+
 	public int getWidth() {
 		return _levelLoader.getWidth();
 	}
@@ -472,5 +473,5 @@ public class Board implements IRender {
 	public int getHeight() {
 		return _levelLoader.getHeight();
 	}
-	
+
 }
