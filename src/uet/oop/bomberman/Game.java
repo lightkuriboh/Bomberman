@@ -1,5 +1,6 @@
 package uet.oop.bomberman;
 
+import uet.oop.bomberman.database.Mongo;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.gui.Frame;
 import uet.oop.bomberman.input.Keyboard;
@@ -8,8 +9,11 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import uet.oop.bomberman.sound.SoundPlayer;
-import uet.oop.bomberman.database.Mongo;
 
 /**
  * Tạo vòng lặp cho game, lưu trữ một vài tham số cấu hình toàn cục,
@@ -21,11 +25,11 @@ public class Game extends Canvas {
 							WIDTH = TILES_SIZE * (33 / 2),
 							HEIGHT = 13 * TILES_SIZE;
 
-	public static int SCALE = 2;
+	public static int SCALE = 3;
 	
 	public static final String TITLE = "BombermanGame";
 	
-	private static final int BOMBRATE = 2;
+	private static final int BOMBRATE = 3;
 	private static final int BOMBRADIUS = 1;
 	private static final double BOMBERSPEED = 1.0;
 	
@@ -51,16 +55,20 @@ public class Game extends Canvas {
 	
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
-	
+
+	protected static int _players = 0;
+	protected static int _id;
+	protected static int _levelNum = 4;
 	public Game(Frame frame) {
 		_frame = frame;
 		_frame.setTitle(TITLE);
 		
 		screen = new Screen(WIDTH, HEIGHT);
 		_input = new Keyboard();
-		
+
 		_board = new Board(this, _input, screen);
 		addKeyListener(_input);
+
 
 		try {
 			SoundPlayer.initSoundData();
@@ -72,8 +80,6 @@ public class Game extends Canvas {
 	
 	
 	private void renderGame() {
-
-
 
 		BufferStrategy bs = getBufferStrategy();
 		if(bs == null) {
@@ -124,7 +130,8 @@ public class Game extends Canvas {
 	public void start() {
 
 		_running = true;
-		
+
+
 		long  lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
 		final double ns = 1000000000.0 / 60.0; //nanosecond, 60 frames per second
@@ -171,7 +178,23 @@ public class Game extends Canvas {
 			}
 		}
 	}
-	
+
+	public static int get_id() {
+		return _id;
+	}
+
+	public static void set_id(int _id) {
+		Game._id = _id;
+	}
+
+	public static int get_levelNum() {
+		return _levelNum;
+	}
+
+	public static void add_players() { _players++;}
+
+	public static int get_players() { return _players;}
+
 	public static double getBomberSpeed() {
 		return bomberSpeed;
 	}

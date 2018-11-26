@@ -42,30 +42,6 @@ public class Mongo {
         mongoCollection.findOneAndUpdate(find, updateObject);
     }
 
-    public static boolean getBomb(String player) {
-        boolean ans = false;
-        Document qr = new Document();
-        qr.append("name", player);
-        FindIterable<Document> findIterable = mongoCollection.find(qr);
-        for (Document doc: findIterable) {
-            ans = doc.getBoolean("bomb");
-        }
-        return ans;
-    }
-
-    public static void putBomb(String player, boolean bomb) {
-        Document find = new Document();
-        find.append("name", player);
-
-        Document update = new Document();
-        update.append("bomb", bomb);
-
-        Document updateObject = new Document();
-        updateObject.append("$set", update);
-
-        mongoCollection.findOneAndUpdate(find, updateObject);
-    }
-
     public static void ping() {
         mongoClient = null;
         try {
@@ -80,13 +56,21 @@ public class Mongo {
         updateAction("player2", 0);
 
 
-        try {
+//        try {
+//            Document player1 = new Document();
+//            player1.append("name", "player1");
+//            player1.append("action", 0);
+//
+//            Document player2 = new Document();
+//            player2.append("name", "player2");
+//            player2.append("action", 0);
+//
 //            mongoCollection.insertOne(player1);
 //            mongoCollection.insertOne(player2);
-            System.out.println("insert completed!");
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+//            System.out.println("insert completed!");
+//        } catch (Exception ex) {
+//            System.out.println(ex.getMessage());
+//        }
 
         System.out.println("Done!");
     }
