@@ -67,12 +67,11 @@ public class Connection implements  Runnable{
     }
 
     public void sendObject(Object packet) {
-        if (closed) return;
         try {
             out.writeObject(packet);
             out.flush();
         } catch (IOException e) {
-            return;
+            e.printStackTrace();
         }
     }
 

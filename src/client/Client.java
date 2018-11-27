@@ -83,6 +83,7 @@ public class Client implements Runnable {
             while (running) {
                 try {
                     Object data = in.readObject();
+                    //if (data instanceof PlayerMove) System.out.println(((PlayerMove)data).getDirState().get(0));
                     listener.received(data);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();

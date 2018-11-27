@@ -10,4 +10,8 @@ public class PlayerMove implements Serializable {
         return dirState;
     }
 
+    public PlayerMove(List<Integer> dirState) {
+        this.dirState = dirState;
+    }
+
 }

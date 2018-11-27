@@ -3,6 +3,7 @@ package server;
 import signal.AssignId;
 import signal.FullPlayer;
 import signal.GameStart;
+import signal.PlayerMove;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -90,8 +91,10 @@ public class Server implements Runnable {
     }
 
     public void sendCmdToAll() {
+        PlayerMove data = new PlayerMove(cmdList);
+        System.out.println(data.getDirState().get(0));
         for(int i=0;i<connectionList.size();i++) {
-            connectionList.get(i).sendObject(cmdList);
+            connectionList.get(i).sendObject(data);
         }
     }
 
