@@ -1,6 +1,7 @@
 package signal;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerMove implements Serializable {
@@ -11,7 +12,8 @@ public class PlayerMove implements Serializable {
     }
 
     public PlayerMove(List<Integer> dirState) {
-        this.dirState = dirState;
+        this.dirState = new ArrayList<>();
+        for(int i=0;i<dirState.size();i++) this.dirState.add(dirState.get(i));
     }
 
 }

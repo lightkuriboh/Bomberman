@@ -92,7 +92,7 @@ public class Server implements Runnable {
 
     public void sendCmdToAll() {
         PlayerMove data = new PlayerMove(cmdList);
-        System.out.println(data.getDirState().get(0));
+        //System.out.println(data.getDirState().get(0));
         for(int i=0;i<connectionList.size();i++) {
             connectionList.get(i).sendObject(data);
         }
