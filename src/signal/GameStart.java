@@ -7,10 +7,17 @@ import java.util.Scanner;
 public class GameStart implements Serializable {
      private int _width,_height;
      private char[][] _map;
-     public GameStart(String mapPath) {
+     private int mx_players;
+
+     public GameStart(String mapPath, int mx_players) {
+         this.mx_players = mx_players;
          loadLevel(mapPath);
      }
 
+
+    public int getMx_players() {
+        return mx_players;
+    }
 
     private void loadLevel(String path) {
         // TODO: đọc dữ liệu từ tệp cấu hình /levels/Level{level}.txt
@@ -21,7 +28,6 @@ public class GameStart implements Serializable {
 
             _height = scanner.nextInt();
             _width = scanner.nextInt();
-            System.out.println(_height);
             _map = new char[_height][_width];
 
             scanner.nextLine();

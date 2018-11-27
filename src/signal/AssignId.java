@@ -8,4 +8,8 @@ public class AssignId implements Serializable {
     public AssignId(int id) {
         this.id = id;
     }
+
+    public int getId() {
+        return id;
+    }
 }

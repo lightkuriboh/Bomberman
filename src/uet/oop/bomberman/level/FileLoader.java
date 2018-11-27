@@ -62,28 +62,28 @@ public class FileLoader extends MapLoader {
 
 					case 'p':
 						_board.addEntity(pos, new Grass(x, y, Sprite.grass));
-						if (_board.get_bomberNum()<1)  break;
+						if (Game.get_players()<1)  break;
 						_board.addCharacter( new Bomber(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board, 0) );
 
 						break;
 
 					case 'o':
 						_board.addEntity(pos, new Grass(x, y, Sprite.grass));
-						if (_board.get_bomberNum()<2) break;
+						if (Game.get_players()<2) break;
 						_board.addCharacter( new Bomber(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board, 1) );
 
 						break;
 
 					case 'k':
 						_board.addEntity(pos, new Grass(x, y, Sprite.grass));
-						if (_board.get_bomberNum()<3) break;
+						if (Game.get_players()<3) break;
 						_board.addCharacter( new Bomber(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board, 1) );
 
 						break;
 
 					case 'l':
 						_board.addEntity(pos, new Grass(x, y, Sprite.grass));
-						if (_board.get_bomberNum()<4) break;
+						if (Game.get_players()<4) break;
 						_board.addCharacter( new Bomber(Coordinates.tileToPixel(x), Coordinates.tileToPixel(y) + Game.TILES_SIZE, _board, 1) );
 
 						break;

@@ -3,6 +3,7 @@ package uet.oop.bomberman;
 import client.Client;
 import signal.GameStart;
 import signal.PlayerMove;
+import signal.SingleMove;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.LayeredEntity;
 import uet.oop.bomberman.entities.Message;
@@ -39,7 +40,7 @@ public class Board implements IRender {
 	private List<Message> _messages = new ArrayList<>();
 	private int _screenToShow = -1; //1:endgame, 2:changelevel, 3:paused
 
-	protected List<Integer> _dirList = new ArrayList<>();
+	protected List<Integer> _dirList;
 	protected Client _client;
 	private int _time = Game.TIME;
 	private int _points = Game.POINTS;
@@ -49,6 +50,7 @@ public class Board implements IRender {
 		_input = input;
 		_screen = screen;
 		_client = client;
+		_dirList = _client.getMoveCmd();
 		loadLevel(1); //start in level 1
 //		System.out.println(_MapLoader.getWidth());
 //		System.out.println(_MapLoader.getHeight());
@@ -337,8 +339,11 @@ public class Board implements IRender {
 		if( _game.isPaused() ) return;
 		Iterator<Bomb> itr = _bombs.iterator();
 		
-		while(itr.hasNext())
-			itr.next().update();
+		while(itr.hasNext()) {
+			Bomb b= itr.next();
+			if (b.isRemoved()) itr.remove(); else
+			b.update();
+		}
 	}
 	
 	protected void updateMessages() {
@@ -364,7 +369,16 @@ public class Board implements IRender {
 	}
 
 	private void updateCommand() {
-		_dirList = _client.getMoveCmd();
+		_input.update();
+			Integer dirState = 0;
+			if (_input.up) dirState |= Bomber.DIR_UP;
+			if (_input.down) dirState |= Bomber.DIR_DOWN;
+			if (_input.left) dirState |= Bomber.DIR_LEFT;
+			if (_input.right) dirState |= Bomber.DIR_RIGHT;
+			if (_input.space) dirState |= Bomber.DIR_BOMB;
+			if (dirState != 0) {
+				_client.sendObject(new SingleMove(dirState));
+			}
 	}
 
 	public Keyboard getInput() {

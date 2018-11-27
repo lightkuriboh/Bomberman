@@ -1,5 +1,7 @@
 package server;
 
+import signal.AssignId;
+import signal.FullPlayer;
 import signal.GameStart;
 
 import java.io.IOException;
@@ -17,10 +19,14 @@ public class Server implements Runnable {
     private List<Integer> cmdList = new ArrayList<>();
     private ServerListener serverListener = new ServerListener(this);
     private int Max_players;
-    private GameStart gameStart = new GameStart(mapPath);
+    private GameStart gameStart;
+    private CommandCenter commandCenter;
     public Server(int port, int mp) {
         this.port = port;
         this.Max_players = mp;
+        gameStart = new GameStart(mapPath,mp);
+        commandCenter = new CommandCenter(this);
+        commandCenter.start();
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -37,6 +43,7 @@ public class Server implements Runnable {
         running = true;
         while (running) {
             try {
+
                 Socket socket = serverSocket.accept();
                 initSocket(socket);
             } catch (IOException e) {
@@ -47,12 +54,21 @@ public class Server implements Runnable {
 
     private void initSocket(Socket socket) {
         Connection connection = new Connection(socket, this, serverListener);
-        connection.setId(connectionList.size()-1);
+        for(int i=0;i<connectionList.size();i++) {
+            if (!connectionList.get(i).assigned()) {
+                connectionList.set(i,connection);
+                new Thread(connection).start();
+                connection.sendObject(new AssignId(i));
+                return;
+            }
+        }
+        if (connectionList.size() == Max_players) {
+            connection.sendObject(new FullPlayer());
+        }
+        connection.setId(connectionList.size());
         connectionList.add(connection);
         cmdList.add(0);
         new Thread(connection).start();
-        if (connectionList.size() == Max_players) sendDataToAll(gameStart);
-        System.out.println(connectionList.size());
     }
 
     public void shutdown() {
@@ -64,14 +80,25 @@ public class Server implements Runnable {
         }
     }
 
-    public void sendDataToAll(Object packet) {
+    public void sendDataToAll() {
         for(int i=0;i<connectionList.size();i++) {
-            connectionList.get(i).sendObject(packet);
+            connectionList.get(i).sendObject(gameStart);
+            AssignId data = new AssignId(i);
+            connectionList.get(i).sendObject(data);
+            connectionList.get(i).setIdAssigned(true);
+        }
+    }
+
+    public void sendCmdToAll() {
+        for(int i=0;i<connectionList.size();i++) {
+            connectionList.get(i).sendObject(cmdList);
         }
     }
 
     public void updateMove(int id,int dirState) {
         cmdList.set(id,dirState);
     }
-
+    public List<Integer> getCmdList() {
+        return cmdList;
+    }
 }

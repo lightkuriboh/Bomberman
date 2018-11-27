@@ -24,10 +24,9 @@ public class Client implements Runnable {
     private EventListener listener;
     public String name;
     private int id;
-    boolean started;
+    public static boolean started = false;
     protected Keyboard input;
     protected GameStart gameStart;
-
 
     private List<Integer> moveCmd = new ArrayList<>();
 
@@ -80,38 +79,25 @@ public class Client implements Runnable {
     }
     @Override
     public void run() {
-        try {
             running = true;
-            while (running)
+            while (running) {
                 try {
                     Object data = in.readObject();
                     listener.received(data);
-                    if (started) {
-                        input.update();
-                        Integer dirState = 0;
-                        if (input.up) dirState |= Bomber.DIR_UP;
-                        if (input.down) dirState |= Bomber.DIR_DOWN;
-                        if (input.left) dirState |= Bomber.DIR_LEFT;
-                        if (input.right) dirState |= Bomber.DIR_RIGHT;
-                        if (input.space) dirState |= Bomber.DIR_BOMB;
-                        if (dirState != 0) {
-                            sendObject(dirState);
-                        }
-                    }
-
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
-                } catch (SocketException e) {
-                    close();
+                }catch (IOException e) {
+                    e.printStackTrace();
                 }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            }
     }
 
     public void updateCmd(PlayerMove data) {
         List<Integer> tmp = data.getDirState();
-        for(int i=0;i< Game.get_players();i++) moveCmd.set(i,tmp.get(i));
+        for(int i=0;i< Game.get_players();i++) {
+            moveCmd.set(i,tmp.get(i));
+        }
+
     }
 
     public List<Integer> getMoveCmd() {
@@ -120,12 +106,11 @@ public class Client implements Runnable {
 
     public void startGame(GameStart gameStart) {
         this.gameStart = gameStart;
-        started = true;
-        for(int i=0;i< Game.get_players();i++) moveCmd.add(0);
-    }
-
-    public boolean started() {
-        return this.started;
+        synchronized (Game.LOCK) {
+            started = true;
+            Game.LOCK.notifyAll();
+        }
+        for(int i=0;i< gameStart.getMx_players();i++) moveCmd.add(0);
     }
 
     public int getId() {
@@ -139,5 +124,7 @@ public class Client implements Runnable {
     public GameStart getGameStart() {
         return gameStart;
     }
+
+    public boolean isStopped() {return !running;}
 }
 

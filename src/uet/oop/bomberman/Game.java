@@ -60,6 +60,9 @@ public class Game extends Canvas {
 	protected static int _players = 0;
 	protected static int _id;
 	protected static int _levelNum = 4;
+
+	public static Object LOCK = new Object();
+
 	public Game(Frame frame) {
 		_frame = frame;
 		_frame.setTitle(TITLE);
@@ -81,10 +84,16 @@ public class Game extends Canvas {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		while (!_client.started()) {
+		synchronized (LOCK) {
+			while (!Client.started) {
+				try{LOCK.wait();}
+				catch (InterruptedException e) {
+					break;
+				}
+			}
 		}
-
+		_players = _client.getGameStart().getMx_players();
+		//System.out.println(_players);
 		_board = new Board(this, _input, screen,_client);
 		addKeyListener(_input);
 
@@ -146,9 +155,9 @@ public class Game extends Canvas {
 		_input.update();
 		_board.update();
 	}
-	
-	public void start() {
 
+	public void start() {
+		if (_client.isStopped()) return;
 		_running = true;
 
 
@@ -211,8 +220,6 @@ public class Game extends Canvas {
 	public static int get_levelNum() {
 		return _levelNum;
 	}
-
-	public static void add_players() { _players++;}
 
 	public static int get_players() { return _players;}
 

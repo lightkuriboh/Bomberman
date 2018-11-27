@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class Connection implements  Runnable{
 
@@ -16,6 +17,7 @@ public class Connection implements  Runnable{
     private Server server;
     private boolean idAssigned = false;
     private ServerListener serverListener;
+    private boolean closed = false;
 
     public Connection(Socket socket, Server server, ServerListener serverListener) {
         this.socket = socket;
@@ -34,43 +36,43 @@ public class Connection implements  Runnable{
     public void run() {
         try {
             while (socket.isConnected()) {
-                System.out.println();
-                if (!idAssigned) {
-                    AssignId data = new AssignId(id);
-                    sendObject(data);
-                    idAssigned = true;
-                }
                 try {
                     Object data = in.readObject();
                     serverListener.handle(id, data);
                     //System.out.println((String)data);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
+                } catch (SocketException e) {
+                    close();
+                    break;
                 }
             }
 
         }catch (IOException e) {
             e.printStackTrace();
         }
-        close();
     }
 
     public void close() {
+        if (closed) return;
         try {
             in.close();
             out.close();
+            closed = true;
             socket.close();
+            idAssigned = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void sendObject(Object packet) {
+        if (closed) return;
         try {
             out.writeObject(packet);
             out.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            return;
         }
     }
 
@@ -81,4 +83,10 @@ public class Connection implements  Runnable{
     public void setId(int id) {
         this.id = id;
     }
+
+    public void setIdAssigned(boolean idAssigned) {
+        this.idAssigned = idAssigned;
+    }
+
+    public boolean assigned() {return idAssigned;}
 }
