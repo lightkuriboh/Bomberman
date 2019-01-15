@@ -98,6 +98,7 @@ public class Server implements Runnable {
         }
     }
 
+
     public void updateMove(int id,int dirState) {
         cmdList.set(id,dirState);
     }

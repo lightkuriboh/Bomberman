@@ -376,9 +376,8 @@ public class Board implements IRender {
 			if (_input.left) dirState |= Bomber.DIR_LEFT;
 			if (_input.right) dirState |= Bomber.DIR_RIGHT;
 			if (_input.space) dirState |= Bomber.DIR_BOMB;
-			if (dirState != 0) {
-				_client.sendObject(new SingleMove(dirState));
-			}
+			_client.sendObject(new SingleMove(dirState));
+
 	}
 
 	public Keyboard getInput() {
